@@ -1,0 +1,15 @@
+include ':RemixedDungeon', ':processor', ':annotation'
+
+// Example project-level settings.gradle
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        google()
+        maven {
+            url "https://artifactory-external.vkpartner.ru/artifactory/maven"
+        }
+        maven { url "https://artifactory.appodeal.com/appodeal/" }
+        maven { url 'https://developer.huawei.com/repo/' }
+    }
+}

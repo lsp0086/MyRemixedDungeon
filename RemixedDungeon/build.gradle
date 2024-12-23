@@ -1,0 +1,219 @@
+apply plugin: 'com.android.application'
+
+ext.getApiField = { name ->
+    def stringsFile = "RemixedDungeon/src/main/res/values/strings_api_signature.xml"
+    return new XmlParser().parse(stringsFile).string.find { it.@name.equals name }.text()
+}
+
+def jks_keyAlias    = System.getenv('jks_keyAlias') ? System.getenv('jks_keyAlias') : 'testKey'
+def jks_keyPassword = System.getenv('jks_keyPassword') ? System.getenv('jks_keyPassword') : '123456'
+def jks_storePassword = System.getenv('jks_storePassword') ? System.getenv('jks_storePassword') : '123456'
+def jks_storePath = System.getenv('jks_storePath')  ? System.getenv('jks_storePath') : 'testKey/test.jks'
+
+android {
+
+    signingConfigs {
+        release {
+            keyAlias jks_keyAlias
+            keyPassword jks_keyPassword
+            storeFile file(jks_storePath)
+            storePassword jks_storePassword
+        }
+        debug {
+            keyAlias jks_keyAlias
+            keyPassword jks_keyPassword
+            storeFile file(jks_storePath)
+            storePassword jks_storePassword
+        }
+    }
+
+    defaultConfig {
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders = ["admob_app_id":getApiField("admob_app_id")]
+
+        applicationId "com.nyrds.pixeldungeon.ml"
+        versionCode 1214
+        versionName "32.1.beta.7"
+        targetSdkVersion 34
+        compileSdkVersion 34
+        minSdkVersion 21
+
+        // Enabling multidex support.
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            minifyEnabled false
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = "true"
+            manifestPlaceholders["performanceCollectionDeactivated"] = "false"
+        }
+        debug {
+            debuggable true
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.release
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = "false"
+            manifestPlaceholders["performanceCollectionDeactivated"] = "true"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility "10"
+        targetCompatibility "10"
+    }
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/MANIFEST.MF']
+        }
+    }
+
+
+    flavorDimensions "platform","market"
+
+    productFlavors {
+        googlePlay {
+            dimension "market"
+            versionCode defaultConfig.versionCode + 10000
+        }
+
+        ruStore {
+            minSdkVersion 23
+            dimension "market"
+        }
+
+        fdroid {
+            dimension "market"
+        }
+
+        huawei {
+            minSdkVersion 19
+            dimension "market"
+            applicationIdSuffix ".huawei"
+        }
+
+        android {
+            dimension "platform"
+
+        }
+
+        libgdx {
+            dimension "platform"
+        }
+
+        none {
+            dimension "market"
+        }
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'src/android/AndroidManifest.xml'
+            //java.srcDirs = ['src/android/java']
+            //res.srcDirs = ['src/android/res'] # need to sync transifex first
+        }
+    }
+    androidResources {
+        noCompress 'mp3', 'ogg'
+    }
+    namespace 'com.nyrds.pixeldungeon.ml'
+    lint {
+        abortOnError false
+    }
+    buildFeatures {
+        buildConfig true
+    }
+
+}
+
+
+
+dependencies {
+    implementation project(':annotation')
+
+    annotationProcessor project(':processor')
+
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'org.luaj:luaj-jse:3.0.1'
+    implementation 'info.guardianproject.netcipher:netcipher:1.2'
+    implementation 'org.hjson:hjson:3.0.0'
+    implementation 'commons-io:commons-io:2.6' //don't upgrade will cause runtime crash on old devices
+    implementation 'org.jetbrains:annotations:23.0.0'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+
+    androidImplementation 'androidx.documentfile:documentfile:1.0.1'
+    androidImplementation 'com.google.guava:guava:31.1-android'
+    androidImplementation 'androidx.multidex:multidex:2.0.1'
+
+    fdroidImplementation  'androidx.appcompat:appcompat:1.6.1' //don't upgrade will break build
+
+
+    googlePlayImplementation 'com.google.android.ads.consent:consent-library:1.0.8'
+
+    googlePlayImplementation ("com.appodeal.ads:sdk:3.3.2.0") {
+        exclude group: "com.appodeal.ads.sdk.networks", module: "meta"
+        exclude group: "com.appodeal.ads.sdk.services", module: "adjust"
+        exclude group: "com.appodeal.ads.sdk.services", module: "appsflyer"
+        exclude group: "com.appodeal.ads.sdk.services", module: "facebook_analytics"
+        exclude group: "com.appodeal.ads.sdk.services", module: "firebase"
+        exclude group: "com.applovin.mediation", module: "google-adapter"
+        exclude group: "com.applovin.mediation", module: "facebook-adapter"
+        exclude group: "io.bidmachine", module: "ads.networks.meta_audience"
+        exclude group: "org.bidon", module: "admob-adapter"
+        exclude group: "org.bidon", module: "meta-adapter"
+    }
+
+    googlePlayImplementation 'com.yandex.android:mobileads:7.4.0'
+
+    ruStoreImplementation ("com.appodeal.ads:sdk:3.3.2.0") {
+        exclude group: "com.appodeal.ads.sdk.networks", module: "meta"
+        exclude group: "com.appodeal.ads.sdk.services", module: "adjust"
+        exclude group: "com.appodeal.ads.sdk.services", module: "appsflyer"
+        exclude group: "com.appodeal.ads.sdk.services", module: "facebook_analytics"
+        exclude group: "com.appodeal.ads.sdk.services", module: "firebase"
+        exclude group: "com.applovin.mediation", module: "google-adapter"
+        exclude group: "com.applovin.mediation", module: "facebook-adapter"
+        exclude group: "io.bidmachine", module: "ads.networks.meta_audience"
+        exclude group: "org.bidon", module: "admob-adapter"
+        exclude group: "org.bidon", module: "meta-adapter"
+    }
+
+    ruStoreImplementation 'com.yandex.android:mobileads:7.4.0'
+    ruStoreImplementation 'ru.rustore.sdk:billingclient:6.0.0'
+
+
+    googlePlayImplementation 'com.google.android.gms:play-services-base:18.3.0'
+    googlePlayImplementation 'com.google.android.gms:play-services-auth:21.0.0'
+    googlePlayImplementation "com.google.android.gms:play-services-games:23.1.0"
+    googlePlayImplementation 'com.google.android.gms:play-services-ads:23.0.0'
+
+
+    googlePlayImplementation 'com.android.billingclient:billing:6.2.1'
+
+    googlePlayImplementation platform('com.google.firebase:firebase-bom:30.3.0')
+
+    googlePlayImplementation 'com.google.firebase:firebase-analytics'
+    googlePlayImplementation 'com.google.firebase:firebase-crashlytics'
+    googlePlayImplementation 'com.google.firebase:firebase-perf'
+
+    huaweiImplementation 'com.huawei.hms:ads-lite:13.4.30.301'
+    huaweiImplementation 'com.huawei.hms:hianalytics:5.0.0.300'
+    huaweiImplementation 'com.huawei.agconnect:agconnect-crash:1.4.1.300'
+}
+
+if (getGradle().getStartParameter().getTaskRequests()
+        .toString().contains("GooglePlay")) {
+    apply plugin: 'com.google.firebase.crashlytics'
+    apply plugin: 'com.google.gms.google-services'
+    apply plugin: 'com.google.firebase.firebase-perf'
+
+}
+
+if (getGradle().getStartParameter().getTaskRequests()
+        .toString().contains("Huawei")) {
+    apply plugin: 'com.huawei.agconnect'
+}

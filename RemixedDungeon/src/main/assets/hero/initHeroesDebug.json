@@ -1,0 +1,243 @@
+{
+  "common": {
+    "armor": {
+      "kind": "GothicArmor",
+      "identified": true,
+      "level": 10
+    },
+    "allies" : [
+      {
+        "kind" : "Rat",
+        "level": 1
+      }
+    ],
+    "items": [
+      {
+        "kind": "Carcass of Rat",
+        "level": 1,
+        "quantity": 100,
+        "identetifyLevel": 2
+      },
+      {
+        "kind": "test/TestItem",
+        "identified": true,
+        "level": 10
+      },
+      {
+        "kind": "WandOfIcebolt",
+        "identified": true,
+        "level": 3
+      },
+      {
+        "kind": "Gold",
+        "quantity": 10
+      }
+    ],
+    "str": 20,
+    "hp": 20000,
+    "magicAffinity": "Common",
+    "sp": 100,
+    "maxSp": 100,
+    "sl": 10,
+    "lvl": 30
+  },
+  "non_expert": {
+    "items": [
+      {
+        "kind": "Ration"
+      },
+      {
+        "kind": "SpellBook",
+        "identified": true
+      }
+    ]
+  },
+  "WARRIOR": {
+    "weapon": {
+      "kind": "ShortSword",
+      "level": 200,
+      "identified": true
+    },
+    "str": 11,
+    "knownItems": [
+      {
+        "kind": "PotionOfStrength"
+      }
+    ],
+    "quickslot": [
+      {
+        "spell": "DieHard"
+      }
+    ],
+    "magicAffinity": "Combat"
+  },
+  "MAGE": {
+    "items": [
+      {
+        "kind": "WandOfMagicMissile",
+        "identified": true
+      }
+    ],
+    "quickslot": [
+      {
+        "kind": "WandOfMagicMissile"
+      },
+      {
+        "spell": "WindGust"
+      }
+    ],
+    "knownItems": [
+      {
+        "kind": "ScrollOfIdentify"
+      }
+    ],
+    "maxSp": 15,
+    "sp": 15,
+    "magicAffinity": "Elemental"
+  },
+  "ROGUE": {
+    "ring1": {
+      "kind": "RingOfShadows",
+      "identified": true,
+      "level": 1
+    },
+    "knownItems": [
+      {
+        "kind": "ScrollOfMagicMapping"
+      }
+    ],
+    "quickslot": [
+      {
+        "spell": "Cloak"
+      }
+    ],
+    "magicAffinity": "Rogue"
+  },
+  "HUNTRESS": {
+    "items": [
+      {
+        "kind": "Boomerang",
+        "identified": true
+      }
+    ],
+    "quickslot": [
+      {
+        "kind": "Boomerang"
+      },
+      {
+        "spell": "Calm"
+      }
+    ],
+    "magicAffinity": "Huntress",
+    "hp": 15
+  },
+  "ELF": {
+    "weapon": {
+      "kind": "ElvenBow",
+      "identified": true,
+      "level": 1
+    },
+    "items": [
+      {
+        "kind": "CommonArrow",
+        "quantity": 20,
+        "identified": true
+      },
+      {
+        "kind": "ElvenDagger",
+        "identified": true
+      }
+    ],
+    "quickslot": [
+      {
+        "kind": "CommonArrow"
+      },
+      {
+        "spell": "MagicArrow"
+      }
+    ],
+    "immunities": [
+      "Roots"
+    ],
+    "magicAffinity": "Elf",
+    "str": 9,
+    "hp": 15
+  },
+  "NECROMANCER": {
+    "armor": {
+      "kind": "NecromancerRobe",
+      "identified": true
+    },
+    "items": [
+      {
+        "kind": "SkeletonKey",
+        "levelId": "7",
+        "depth": "7"
+      }
+    ],
+    "quickslot": [
+      {
+        "spell": "SummonDeathling"
+      }
+    ],
+    "knownItems": [
+      {
+        "kind": "PotionOfHealing"
+      }
+    ],
+    "magicAffinity": "Necromancy"
+  },
+  "GNOLL": {
+    "weapon": {
+      "kind": "GnollTamahawk",
+      "identified": true
+    },
+    "armor": {
+      "kind": "NoItem"
+    },
+    "items": [
+      {
+        "kind": "Dart",
+        "identified": true,
+        "quantity": 8
+      }
+    ],
+    "magicAffinity": "Witchcraft",
+    "quickslot": [
+      {
+        "kind": "Dart"
+      },
+      {
+        "spell": "Roar"
+      }
+    ],
+    "forbiddenActions": [
+      "Scroll_ACRead",
+      "TomeOfMastery_ACRead",
+      "Stylus_ACInscribe"
+    ],
+    "friendlyMobs": [
+      "Gnoll",
+      "Shaman",
+      "Brute",
+      "Shielded",
+      "ShamanElder"
+    ],
+    "str": 15,
+    "hp": 5
+  },
+  "LICH": {
+    "immunities": [
+      "Paralysis",
+      "ToxicGas",
+      "Terror",
+      "Death",
+      "Amok",
+      "Blindness",
+      "Sleep",
+      "Poison",
+      "Vertigo",
+      "Bleeding"
+    ]
+  }
+}
