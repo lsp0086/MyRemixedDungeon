@@ -1,5 +1,6 @@
 package com.nyrds.pixeldungeon.items.accessories;
 
+import com.nyrds.util.Util;
 import com.watabou.pixeldungeon.actors.hero.Hero;
 import com.watabou.pixeldungeon.actors.hero.HeroClass;
 
@@ -15,6 +16,9 @@ public class Rudolph extends Accessory{
 
     @Override
     public boolean usableBy(Hero hero) {
+        if (Util.isDebug()){
+            return true;
+        }
         if (hero.getHeroClass().equals(HeroClass.GNOLL)) {
             return false;
         }

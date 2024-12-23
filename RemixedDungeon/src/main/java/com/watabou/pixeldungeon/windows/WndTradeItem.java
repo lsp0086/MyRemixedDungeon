@@ -6,6 +6,7 @@ import com.nyrds.pixeldungeon.ml.R;
 import com.nyrds.pixeldungeon.windows.VBox;
 import com.nyrds.platform.util.StringsManager;
 import com.nyrds.util.GuiProperties;
+import com.nyrds.util.Util;
 import com.watabou.noosa.Text;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.actors.hero.Hero;
@@ -208,6 +209,9 @@ public class WndTradeItem extends Window {
             int price = shopkeeper.priceSell(item);
             if (Dungeon.hero.hasBuff(RingOfHaggler.Haggling.class) && price >= 2) {
                 price /= 2;
+            }
+            if (Util.isDebug()){
+                return 0;
             }
             return price;
         }
