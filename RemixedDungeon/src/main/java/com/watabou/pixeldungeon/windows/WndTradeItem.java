@@ -120,6 +120,9 @@ public class WndTradeItem extends Window {
         vbox.clear();
 
         int priceAll = price(item, true);
+        if (customer.isFree){
+            priceAll = 0;
+        }
 
         if (item.quantity() == 1) {
 
@@ -136,7 +139,7 @@ public class WndTradeItem extends Window {
         } else {
             for (int i = 0; i < tradeQuantity.length; ++i) {
                 if (item.quantity() > tradeQuantity[i]) {
-                    final int priceFor = priceAll / item.quantity() * tradeQuantity[i];
+                    int priceFor = priceAll / item.quantity() * tradeQuantity[i];
                     final int finalI = i;
                     RedButton btnBuyN = new RedButton(Utils.format(R.string.WndTradeItem_BuyN,
                             tradeQuantity[finalI],
@@ -146,6 +149,9 @@ public class WndTradeItem extends Window {
                             buy(item, tradeQuantity[finalI]);
                         }
                     };
+                    if (customer.isFree){
+                        priceFor = 0;
+                    }
                     btnBuyN.enable(priceFor <= customer.gold());
                     btnBuyN.setSize(WIDTH, BTN_HEIGHT);
                     vbox.add(btnBuyN);

@@ -2883,7 +2883,7 @@ remix.31.1\n
   <string name="ChampionOfFireBuff_Info">“注入了火焰的狂暴，这一特质增强了生物的凶猛和战斗力。火焰冠军是一个可怕的对手，它能发动毁灭性的攻击，将敌人吞没在灼热的火焰中，让所有敢于对抗它的人感到恐惧。</string>
   <string name="ChampionOfEarthBuff_Name">地球冠军</string>
   <string name="ChampionOfEarthBuff_Info">地球冠军体现了不屈的力量，因为这种特质增强了生物的抗伤害性，并增加了其最大的生命力。这种转变使其成为危险深处的一个令人生畏的对手，能够轻松地摆脱攻击，坚定不移地持久战斗。</string>
-  <string name="Welcome_Text_32">混音。32\n</string>
+  <string name="Welcome_Text_32">混合地牢V32欢迎你\n</string>
     <string name="Pickaxe_NothingToMine">这里没什么可挖的！</string>
     <string name="Pickaxe_InsufficientStr">我的力量不够！</string>
     <string name="Carcass_Name">%s的剩余部分</string>

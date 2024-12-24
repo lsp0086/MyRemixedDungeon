@@ -99,6 +99,8 @@ public class Hero extends Char {
     private static final float TIME_TO_REST = 1f;
     private static final float TIME_TO_SEARCH = 2f;
 
+    public boolean isFree = false;
+
     @Nullable
     static public Runnable doOnNextAction;
 
