@@ -873,6 +873,7 @@
   <string name="WizardHat_Info">一顶装饰有星星饰品的漂亮丝绸帽子。在古代，一些人认为最伟大的巫师会穿特别制作的衣服来增强他们的魔法力量。然而这顶，实际上并没有增加你的魔法能力，但是当你戴上它的时候，感觉是这样的。</string>
   <string name="WndHats_ListTitle">帽子列表</string>
   <string name="WndHats_SlotTitle">已装备</string>
+  <string name="WndHats_NoSlotTitle">选择装备</string>
   <string name="WndHats_NoConnectionMsg">无法连接到Google Play服务</string>
   <string name="WndHats_Purchased">购买成功！</string>
   <string name="WndHats_BackButton">返回</string>

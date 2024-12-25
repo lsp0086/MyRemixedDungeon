@@ -873,6 +873,7 @@
   <string name="WizardHat_Info">一頂裝飾有星星飾品的漂亮絲綢帽子。在古代，一些人認為最偉大的巫師會穿特別製作的衣服來增強他們的魔法力量。然而這頂，實際上並沒有增加你的魔法能力，但是當你戴上它的時候，感覺是這樣的。</string>
   <string name="WndHats_ListTitle">帽子列表</string>
   <string name="WndHats_SlotTitle">已裝備</string>
+  <string name="WndHats_NoSlotTitle">選擇裝備</string>
   <string name="WndHats_NoConnectionMsg">無法連接到Google Play服務</string>
   <string name="WndHats_Purchased">購買成功！</string>
   <string name="WndHats_BackButton">返回</string>
@@ -2884,12 +2885,12 @@ remix.31.1\n
   <string name="ChampionOfEarthBuff_Name">地球冠軍</string>
   <string name="ChampionOfEarthBuff_Info">地球冠軍體現了不屈的力量，因為這種特質增強了生物的抗傷害性，並增加了其最大的生命力。這種轉變使其成為危險深處的一個令人生畏的對手，能夠輕松地擺脫攻擊，堅定不移地持久戰鬥。</string>
   <string name="Welcome_Text_32">混合地牢V32歡迎你\n</string>
-  <string name="Pickaxe_NothingToMine">這裏沒什麼可挖的！</string>
-  <string name="Pickaxe_InsufficientStr">我的力量不夠！</string>
-  <string name="Carcass_Name">%s的剩余部分</string>
-  <string name="Carcass_Info">完全死亡的%s的剩余部分。</string>
-  <string name="ResultDescriptions_Necromancy">在%d級嘗試為屍體設置生命值時，生命值耗盡</string>
-  <string name="Item_ACPickup">拿起</string>
+    <string name="Pickaxe_NothingToMine">這裏沒什麼可挖的！</string>
+    <string name="Pickaxe_InsufficientStr">我的力量不夠！</string>
+    <string name="Carcass_Name">%s的剩余部分</string>
+    <string name="Carcass_Info">完全死亡的%s的剩余部分。</string>
+    <string name="ResultDescriptions_Necromancy">在%d級嘗試為屍體設置生命值時，生命值耗盡</string>
+    <string name="Item_ACPickup">拿起</string>
   <string name="Necromancy_Death">你在練習招魂術時耗盡了所有的生命力。</string>
   <string name="AC_Necromancy">死靈術</string>
   <string name="AC_Devour">吞噬</string>

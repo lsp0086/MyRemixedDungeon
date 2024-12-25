@@ -872,6 +872,7 @@
   <string name="WizardHat_Info">A beautiful silk hat decorated with star ornaments. Back in the old times, some believed that the greatest wizards wore specially crafted clothing that increased their magical powers. This one, however doesn\'t actually increase your magical capabilities, but sure feels like it when you wear it.</string>
   <string name="WndHats_ListTitle">List of Accessories</string>
   <string name="WndHats_SlotTitle">Equipped</string>
+  <string name="WndHats_NoSlotTitle">Select An Equip</string>
   <string name="WndHats_NoConnectionMsg">Unable to connect to Google Play.</string>
   <string name="WndHats_Purchased">Got it!</string>
   <string name="WndHats_BackButton">Back</string>

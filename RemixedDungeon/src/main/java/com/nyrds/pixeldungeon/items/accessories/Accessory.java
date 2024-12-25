@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 
 /**
@@ -34,6 +35,7 @@ public class Accessory {
 
     protected int image = 0;
 
+    @Getter
     protected static final String imageFile = "items/accessories.png";
 
     static final private Map<String, Class<? extends Accessory>> allAccessoriesList = new HashMap<>();
