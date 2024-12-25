@@ -2,6 +2,8 @@ package com.nyrds.pixeldungeon.windows;
 
 import static com.watabou.pixeldungeon.ui.Window.GAP;
 
+import android.util.Log;
+
 import com.nyrds.pixeldungeon.game.GameLoop;
 import com.nyrds.pixeldungeon.ml.R;
 import com.nyrds.platform.util.StringsManager;
@@ -119,7 +121,9 @@ public class ChallengeItem extends Component {
     @Override
     public void update() {
         int mask = (int) Math.pow(2, index);
-
+        if (index == 20){
+            Log.d("index test","");
+        }
         if(index>=16) {
             state = Dungeon.isFacilitated(mask);
         } else {

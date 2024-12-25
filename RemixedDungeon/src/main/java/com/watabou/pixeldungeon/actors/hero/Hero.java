@@ -178,6 +178,7 @@ public class Hero extends Char {
     }
 
     private static final String STRENGTH = "STR";
+    private static final String ISFREE = "isfree";
     private static final String EXPERIENCE = "exp";
     public static final String DIFFICULTY = "difficulty";
     private static final String SP = "sp";
@@ -192,7 +193,7 @@ public class Hero extends Char {
         subClass.storeInBundle(bundle);
 
         bundle.put(STRENGTH, STR());
-
+        bundle.put(ISFREE,isFree);
         bundle.put(EXPERIENCE, getExpForLevelUp());
         bundle.put(DIFFICULTY, getDifficulty());
 
@@ -213,7 +214,7 @@ public class Hero extends Char {
 
         setHeroClass(HeroClass.restoreFromBundle(bundle));
         setSubClass(HeroSubClass.restoreFromBundle(bundle));
-
+        isFree = bundle.getBoolean(ISFREE);
         STR(bundle.getInt(STRENGTH));
         updateAwareness();
 

@@ -79,6 +79,7 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.val;
 
@@ -90,7 +91,9 @@ public class Dungeon {
     public static boolean dewVial; // true if the dew vial can be spawned
     public static int transmutation; // depth number for a well of transmutation
 
+    @Getter
     private static int challenges;
+    @Getter
     private static int facilitations;
 
     @NotNull
@@ -121,6 +124,7 @@ public class Dungeon {
 
     public static HeroClass heroClass;
 
+    @Getter
     private static boolean isometricMode = false;
     public static boolean isometricModeAllowed = false;
 
@@ -214,7 +218,8 @@ public class Dungeon {
 
     @Contract(pure = true)
     public static boolean isFacilitated(int mask) {
-        return (facilitations & mask) != 0;
+        int result = (facilitations & mask);
+        return result != 0;
     }
 
     private static void updateStatistics() {
@@ -627,7 +632,8 @@ public class Dungeon {
 
         realtime = bundle.getBoolean(REALTIME);
         setChallenges(bundle.optInt(CHALLENGES, 0));
-        setFacilitations(bundle.optInt(FACILITATIONS, 0));
+        int facilitations = bundle.optInt(FACILITATIONS, 0);
+        setFacilitations(facilitations);
 
         if (fullLoad) {
             chapters = new HashSet<>();
@@ -971,10 +977,6 @@ public class Dungeon {
         saveLevel(getLevelSaveFile(currentPosition()), Dungeon.level);
     }
 
-    public static int getChallenges() {
-        return challenges;
-    }
-
 
     public static void setFacilitation(int mask) {
         facilitations = facilitations | mask;
@@ -1001,10 +1003,6 @@ public class Dungeon {
     public static void resetChallenge(int mask) {
         challenges = challenges & ~mask;
         setChallenges(challenges);
-    }
-
-    public static int getFacilitations() {
-        return facilitations;
     }
 
     public static void setChallenges(int challenges) {
@@ -1062,7 +1060,4 @@ public class Dungeon {
         Dungeon.isometricMode = isometricMode;
     }
 
-    public static boolean isIsometricMode() {
-        return isometricMode;
-    }
 }

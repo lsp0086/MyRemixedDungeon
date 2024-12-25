@@ -120,9 +120,6 @@ public class WndTradeItem extends Window {
         vbox.clear();
 
         int priceAll = price(item, true);
-        if (customer.isFree){
-            priceAll = 0;
-        }
 
         if (item.quantity() == 1) {
 
@@ -133,13 +130,13 @@ public class WndTradeItem extends Window {
                 }
             };
             btnBuy.setSize(WIDTH, BTN_HEIGHT);
-            btnBuy.enable(priceAll <= customer.gold());
+            btnBuy.enable(priceAll <= customer.gold() || customer.isFree);
             vbox.add(btnBuy);
 
         } else {
             for (int i = 0; i < tradeQuantity.length; ++i) {
                 if (item.quantity() > tradeQuantity[i]) {
-                    int priceFor = priceAll / item.quantity() * tradeQuantity[i];
+                    final int priceFor = priceAll / item.quantity() * tradeQuantity[i];
                     final int finalI = i;
                     RedButton btnBuyN = new RedButton(Utils.format(R.string.WndTradeItem_BuyN,
                             tradeQuantity[finalI],
@@ -149,10 +146,7 @@ public class WndTradeItem extends Window {
                             buy(item, tradeQuantity[finalI]);
                         }
                     };
-                    if (customer.isFree){
-                        priceFor = 0;
-                    }
-                    btnBuyN.enable(priceFor <= customer.gold());
+                    btnBuyN.enable(priceFor <= customer.gold() || customer.isFree);
                     btnBuyN.setSize(WIDTH, BTN_HEIGHT);
                     vbox.add(btnBuyN);
                 }
@@ -166,7 +160,7 @@ public class WndTradeItem extends Window {
             };
 
             btnBuyAll.setSize(WIDTH, BTN_HEIGHT);
-            btnBuyAll.enable(priceAll <= customer.gold());
+            btnBuyAll.enable(priceAll <= customer.gold() || customer.isFree);
             vbox.add(btnBuyAll);
         }
         RedButton btnCancel = new RedButton(R.string.WndTradeItem_Cancel) {
@@ -216,7 +210,7 @@ public class WndTradeItem extends Window {
             if (Dungeon.hero.hasBuff(RingOfHaggler.Haggling.class) && price >= 2) {
                 price /= 2;
             }
-            if (Util.isDebug()){
+            if (Util.isDebug() || customer.isFree){
                 return 0;
             }
             return price;
@@ -231,7 +225,9 @@ public class WndTradeItem extends Window {
 
     private void buy(@NotNull Item item, final int quantity) {
         Item boughtItem = item.detach(shopkeeper.getBelongings().backpack, quantity);
-
+        if (boughtItem == null) {
+            return;
+        }
         int price = price(boughtItem, true);
         customer.spendGold(price);
 
