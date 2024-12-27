@@ -15,9 +15,16 @@ import androidx.multidex.MultiDexApplication;
 import com.nyrds.market.MarketApp;
 import com.nyrds.pixeldungeon.game.GamePreferences;
 import com.nyrds.pixeldungeon.ml.R;
+import com.nyrds.platform.EventCollector;
 import com.nyrds.util.ModdingMode;
 import com.nyrds.util.Util;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class RemixedDungeonApp extends MultiDexApplication {
@@ -50,7 +57,24 @@ public class RemixedDungeonApp extends MultiDexApplication {
                 Log.d("Classes", ignore.toString());
             }
         }
-
+/*
+            WebServer server = new WebServer(8080);
+            try {
+                server.start();
+            } catch (IOException e) {
+                EventCollector.logException(e,"WebServer");
+            }
+            try {
+                for (NetworkInterface networkInterface : Collections.list(NetworkInterface.getNetworkInterfaces())) {
+                    Enumeration<InetAddress> addrs = networkInterface.getInetAddresses();
+                    while (addrs.hasMoreElements()) {
+                        Log.d("IP", addrs.nextElement().getHostAddress());
+                    }
+                }
+            } catch (SocketException e) {
+                EventCollector.logException(e,"IP");
+            }
+*/
     }
 
     @Override
@@ -59,7 +83,7 @@ public class RemixedDungeonApp extends MultiDexApplication {
             Log.d("Callbacks", callback.getClass().getName());
         }
 //        if (!callback.getClass().getName().startsWith("com.google.android.gms.measurement.")) {
-            super.registerActivityLifecycleCallbacks(callback);
+        super.registerActivityLifecycleCallbacks(callback);
 //        }
     }
 
