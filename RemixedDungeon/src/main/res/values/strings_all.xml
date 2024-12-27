@@ -872,7 +872,6 @@
   <string name="WizardHat_Info">A beautiful silk hat decorated with star ornaments. Back in the old times, some believed that the greatest wizards wore specially crafted clothing that increased their magical powers. This one, however doesn\'t actually increase your magical capabilities, but sure feels like it when you wear it.</string>
   <string name="WndHats_ListTitle">List of Accessories</string>
   <string name="WndHats_SlotTitle">Equipped</string>
-  <string name="WndHats_NoSlotTitle">Select An Equip</string>
   <string name="WndHats_NoConnectionMsg">Unable to connect to Google Play.</string>
   <string name="WndHats_Purchased">Got it!</string>
   <string name="WndHats_BackButton">Back</string>
@@ -2825,14 +2824,10 @@ No, there was no place for her in the light, not anymore. She turned from the me
   <string name="Facilitations_Names_1">Troll body</string>
   <string name="Facilitations_Names_2">Genie spirit</string>
   <string name="Facilitations_Names_3">Giant strength</string>
-  <string name="Facilitations_Names_4">Free Business</string>
-  <string name="Facilitations_Names_5">Angel Bless</string>
   <string name="Facilitations_Descriptions_0">Mutants have always been treated with contempt and fear, but the absence of hunger will once again give you superiority, this time in conquering the depths of the dungeon.</string>
   <string name="Facilitations_Descriptions_1">It is still not known who were your parents, but the natural troll-like regeneration will help mend all the upcoming battle scars.</string>
   <string name="Facilitations_Descriptions_2">A deep and thorough study of nature as a source of energy will allow you to replenish your magical reserves during the journey.</string>
   <string name="Facilitations_Descriptions_3">Tightening the belt made of ogre skin, which was passed down to each new generation, you make a step towards the unknown that lies ahead.</string>
-  <string name="Facilitations_Descriptions_4">Though the memory of saving a caravan may have faded from your mind, a reward awaits you: the privilege to shop without charge in the store.</string>
-  <string name="Facilitations_Descriptions_5">Blessed by an angel, you now possess the ability to illuminate a wider area and swiftly discern floor information, while also being immune to certain debuff.</string>
   <string name="Challenges_Descriptions_0">The food and water had long gone rotten, driving every adventurer insane from thoughts of death by fear and hunger. Can your diet help you last long enough?</string>
   <string name="Challenges_Descriptions_1">One\'s offense is the best defense. Following these teachings, you venture into the dungeon, with faith being the strongest guardian of your body.</string>
   <string name="Challenges_Descriptions_2">As an adherent of the natural regeneration of the ordinary body, you have always been wary of potions that have remedial properties. Better safe than sorry!</string>

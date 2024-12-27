@@ -110,7 +110,6 @@
     <item>@string/Facilitations_Names_1</item>
     <item>@string/Facilitations_Names_2</item>
     <item>@string/Facilitations_Names_3</item>
-    <item>@string/Facilitations_Names_4</item>
   </string-array>
 
   <string-array name="Challenges_Descriptions">
@@ -129,7 +128,6 @@
     <item>@string/Facilitations_Descriptions_1</item>
     <item>@string/Facilitations_Descriptions_2</item>
     <item>@string/Facilitations_Descriptions_3</item>
-    <item>@string/Facilitations_Descriptions_4</item>
   </string-array>
 
   <string-array name="Hunger_Hungry">

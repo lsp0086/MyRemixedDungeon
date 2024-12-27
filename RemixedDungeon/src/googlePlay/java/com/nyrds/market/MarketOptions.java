@@ -8,7 +8,7 @@ import com.nyrds.platform.game.RemixedDungeon;
  */
 public class MarketOptions {
 	public static boolean haveHats() {
-		return true;
+		return GooglePlayServices.googlePlayServicesUsable(RemixedDungeon.instance());
 	}
 
 	public static boolean haveDonations() {

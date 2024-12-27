@@ -196,7 +196,6 @@ public enum HeroClass implements CharModifier {
                 if (Dungeon.isFacilitated(Facilitations.SUPER_STRENGTH)) {
                     hero.STR(hero.STR() + 4);
                 }
-                hero.isFree = Dungeon.isFacilitated(Facilitations.FREE_BUSINESS);
 
                 hero.lvl(classDesc.optInt("lvl", hero.lvl()));
 

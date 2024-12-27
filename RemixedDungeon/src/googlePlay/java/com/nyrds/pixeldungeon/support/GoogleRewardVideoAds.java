@@ -10,9 +10,7 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.nyrds.pixeldungeon.game.GameLoop;
 import com.nyrds.platform.EventCollector;
 import com.nyrds.platform.game.Game;
-import com.nyrds.util.ModdingMode;
 import com.watabou.noosa.InterstitialPoint;
-import com.watabou.pixeldungeon.utils.GLog;
 import com.watabou.pixeldungeon.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +36,7 @@ public class GoogleRewardVideoAds implements AdsUtilsCommon.IRewardVideoProvider
 
 	@MainThread
 	private void loadNextVideo() {
+		EventCollector.logEvent("admob_reward_requested");
 		try {
 			FullScreenContentCallback fullScreenContentCallback =
 					new FullScreenContentCallback() {
@@ -49,7 +48,7 @@ public class GoogleRewardVideoAds implements AdsUtilsCommon.IRewardVideoProvider
 						@Override
 						public void onAdDismissedFullScreenContent() {
 							mCinemaRewardAd = null;
-							GLog.debug("reward state " + rewardEarned);
+							EventCollector.logEvent("admob_reward_shown");
 							GameLoop.runOnMainThread(GoogleRewardVideoAds.this::loadNextVideo);
 							returnTo.returnToWork(rewardEarned);
 							rewardEarned = false;
@@ -65,11 +64,13 @@ public class GoogleRewardVideoAds implements AdsUtilsCommon.IRewardVideoProvider
 							mCinemaRewardAd = ad;
 							mCinemaRewardAd.setFullScreenContentCallback(fullScreenContentCallback);
 							AdsUtilsCommon.rewardVideoLoaded(GoogleRewardVideoAds.this);
+							EventCollector.logEvent("admob_reward_loaded");
 						}
 
 						@Override
 						public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
 							AdsUtilsCommon.rewardVideoFailed(GoogleRewardVideoAds.this);
+							EventCollector.logEvent("admob_reward_failed", loadAdError.toString());
 						}
 					});
 		} catch (Exception e) {
@@ -90,7 +91,7 @@ public class GoogleRewardVideoAds implements AdsUtilsCommon.IRewardVideoProvider
 			mCinemaRewardAd.show(Game.instance(),
 					rewardItem -> {
 						rewardEarned = true;
-						GLog.debug("reward: %s %d", rewardItem.getType(), rewardItem.getAmount());
+						EventCollector.logEvent("admob_reward_earned", rewardItem.toString());
 						returnTo.returnToWork(true);
 					}
 

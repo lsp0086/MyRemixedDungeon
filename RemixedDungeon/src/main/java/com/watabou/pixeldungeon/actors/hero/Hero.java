@@ -99,8 +99,6 @@ public class Hero extends Char {
     private static final float TIME_TO_REST = 1f;
     private static final float TIME_TO_SEARCH = 2f;
 
-    public boolean isFree = false;
-
     @Nullable
     static public Runnable doOnNextAction;
 
@@ -178,7 +176,6 @@ public class Hero extends Char {
     }
 
     private static final String STRENGTH = "STR";
-    private static final String ISFREE = "isfree";
     private static final String EXPERIENCE = "exp";
     public static final String DIFFICULTY = "difficulty";
     private static final String SP = "sp";
@@ -193,7 +190,7 @@ public class Hero extends Char {
         subClass.storeInBundle(bundle);
 
         bundle.put(STRENGTH, STR());
-        bundle.put(ISFREE,isFree);
+
         bundle.put(EXPERIENCE, getExpForLevelUp());
         bundle.put(DIFFICULTY, getDifficulty());
 
@@ -214,7 +211,7 @@ public class Hero extends Char {
 
         setHeroClass(HeroClass.restoreFromBundle(bundle));
         setSubClass(HeroSubClass.restoreFromBundle(bundle));
-        isFree = bundle.getBoolean(ISFREE);
+
         STR(bundle.getInt(STRENGTH));
         updateAwareness();
 
@@ -267,10 +264,6 @@ public class Hero extends Char {
         return (int) (super.attackSkill(target) * attackSkillFactor);
     }
 
-    @Override
-    public void spend(float time) {
-        super.spend(time);
-    }
 
     @Override
     public int dr() {
@@ -406,8 +399,13 @@ public class Hero extends Char {
 
     @Override
     public void damage(int dmg, @NotNull NamedEntityKind src) {
+        if (!isAlive()) {
+            return;
+        }
+
         restoreHealth = false;
         super.damage(dmg, src);
+
 
         setControlTarget(this);
 

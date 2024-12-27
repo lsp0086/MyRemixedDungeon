@@ -54,6 +54,8 @@ public class YandexBannerProvider implements AdsUtilsCommon.IBannerProvider {
         adView.setAdSize(getAdSize());
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
+        EventCollector.logEvent("yandex_banner_requested");
+
     }
 
     @Override
@@ -71,7 +73,7 @@ public class YandexBannerProvider implements AdsUtilsCommon.IBannerProvider {
 
         @Override
         public void onAdFailedToLoad(@NonNull AdRequestError adRequestError) {
-            EventCollector.logEvent("Banner failed", adRequestError.toString());
+            EventCollector.logEvent("yandex_banner_failed", adRequestError.toString());
             loaded = false;
             AdsUtilsCommon.bannerFailed(YandexBannerProvider.this);
         }

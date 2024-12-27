@@ -6,7 +6,6 @@ import com.nyrds.pixeldungeon.ml.R;
 import com.nyrds.pixeldungeon.windows.VBox;
 import com.nyrds.platform.util.StringsManager;
 import com.nyrds.util.GuiProperties;
-import com.nyrds.util.Util;
 import com.watabou.noosa.Text;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.actors.hero.Hero;
@@ -130,7 +129,7 @@ public class WndTradeItem extends Window {
                 }
             };
             btnBuy.setSize(WIDTH, BTN_HEIGHT);
-            btnBuy.enable(priceAll <= customer.gold() || customer.isFree);
+            btnBuy.enable(priceAll <= customer.gold());
             vbox.add(btnBuy);
 
         } else {
@@ -146,7 +145,7 @@ public class WndTradeItem extends Window {
                             buy(item, tradeQuantity[finalI]);
                         }
                     };
-                    btnBuyN.enable(priceFor <= customer.gold() || customer.isFree);
+                    btnBuyN.enable(priceFor <= customer.gold());
                     btnBuyN.setSize(WIDTH, BTN_HEIGHT);
                     vbox.add(btnBuyN);
                 }
@@ -160,7 +159,7 @@ public class WndTradeItem extends Window {
             };
 
             btnBuyAll.setSize(WIDTH, BTN_HEIGHT);
-            btnBuyAll.enable(priceAll <= customer.gold() || customer.isFree);
+            btnBuyAll.enable(priceAll <= customer.gold());
             vbox.add(btnBuyAll);
         }
         RedButton btnCancel = new RedButton(R.string.WndTradeItem_Cancel) {
@@ -210,9 +209,6 @@ public class WndTradeItem extends Window {
             if (Dungeon.hero.hasBuff(RingOfHaggler.Haggling.class) && price >= 2) {
                 price /= 2;
             }
-            if (Util.isDebug() || customer.isFree){
-                return 0;
-            }
             return price;
         }
 
@@ -225,9 +221,7 @@ public class WndTradeItem extends Window {
 
     private void buy(@NotNull Item item, final int quantity) {
         Item boughtItem = item.detach(shopkeeper.getBelongings().backpack, quantity);
-        if (boughtItem == null) {
-            return;
-        }
+
         int price = price(boughtItem, true);
         customer.spendGold(price);
 

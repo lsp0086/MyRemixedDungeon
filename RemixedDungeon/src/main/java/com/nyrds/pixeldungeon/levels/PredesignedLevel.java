@@ -42,32 +42,28 @@ public class PredesignedLevel extends CustomLevel {
 	@Override
 	@SneakyThrows
 	public void create(int w, int h) {
-		try{
-			width = mLevelDesc.getInt("width");
-			height = mLevelDesc.getInt("height");
+		width = mLevelDesc.getInt("width");
+		height = mLevelDesc.getInt("height");
 
-			initSizeDependentStuff();
+		initSizeDependentStuff();
 
-			JSONArray map = mLevelDesc.getJSONArray("map");
+		JSONArray map = mLevelDesc.getJSONArray("map");
 
-			for (int i = 0; i < map.length(); i++) {
-				set(i, map.getInt(i));
-			}
-
-			readLevelParams();
-
-			placeObjects();
-
-			setupLinks();
-
-			buildFlagMaps();
-			cleanWalls();
-			createMobs();
-			createItems();
-			createScript();
-		}catch (Exception e){
-
+		for (int i = 0; i < map.length(); i++) {
+			set(i, map.getInt(i));
 		}
+
+		readLevelParams();
+
+		placeObjects();
+
+		setupLinks();
+
+		buildFlagMaps();
+		cleanWalls();
+		createMobs();
+		createItems();
+		createScript();
 	}
 
 	private void readLevelParams() throws JSONException {
@@ -93,19 +89,14 @@ public class PredesignedLevel extends CustomLevel {
 
 	@SneakyThrows
 	private void placeObjects() {
-		try {
-			if(mLevelDesc.has("objects")) {
-				JSONArray objects = mLevelDesc.getJSONArray("objects");
+		if(mLevelDesc.has("objects")) {
+			JSONArray objects = mLevelDesc.getJSONArray("objects");
 
-				for (int i = 0; i < objects.length(); i++) {
-					JSONObject object = objects.getJSONObject(i);
-					addLevelObject(LevelObjectsFactory.createLevelObject(this, object));
-				}
+			for (int i = 0; i < objects.length(); i++) {
+				JSONObject object = objects.getJSONObject(i);
+				addLevelObject(LevelObjectsFactory.createLevelObject(this, object));
 			}
-		}catch (Exception e){
-
 		}
-
 	}
 
 	private void setupLinks() throws JSONException {
@@ -222,11 +213,7 @@ public class PredesignedLevel extends CustomLevel {
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-		try {
-			readLevelParams();
-		}catch (Exception e) {
-
-		}
+		readLevelParams();
 	}
 
 	@Nullable

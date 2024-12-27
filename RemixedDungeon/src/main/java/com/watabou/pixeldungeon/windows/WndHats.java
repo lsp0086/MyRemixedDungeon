@@ -1,8 +1,6 @@
 package com.watabou.pixeldungeon.windows;
 
 import com.nyrds.pixeldungeon.items.accessories.Accessory;
-
-import com.nyrds.pixeldungeon.kotlin.tools.ExTool;
 import com.nyrds.pixeldungeon.ml.R;
 import com.nyrds.pixeldungeon.windows.WndHelper;
 import com.nyrds.platform.EventCollector;
@@ -33,10 +31,6 @@ public class WndHats extends Window {
 
 	public Image slot;
 
-	private final Text slotTitle;
-
-	private final TextButton unequipButton;
-
 	public WndHats() {
 
 		EventCollector.logScene(getClass().getCanonicalName());
@@ -45,40 +39,37 @@ public class WndHats extends Window {
 
 		String equippedName = Utils.EMPTY_STRING;
 
-		if (Accessory.equipped() != null) {
+		if (updateSlotImage()) {
 			equippedName = ": " + Accessory.equipped().name();
 		}
 
-
-		String equipTitle;
-		if (equippedName.isEmpty()){
-			equipTitle = StringsManager.getVar(R.string.WndHats_NoSlotTitle);
-		}else{
-			equipTitle = StringsManager.getVar(R.string.WndHats_SlotTitle) + equippedName;
-		}
 		//"Equipped Accessory" slot
 		//Title
-        slotTitle = PixelScene.createMultiline(equipTitle, GuiProperties.titleFontSize());
+        Text slotTitle = PixelScene.createMultiline(StringsManager.getVar(R.string.WndHats_SlotTitle) + equippedName, GuiProperties.titleFontSize());
 		slotTitle.hardlight(0xFFFFFF);
 		slotTitle.maxWidth(WIDTH - GAP * 2);
 		slotTitle.setX((WIDTH - slotTitle.width()) / 2);
 		slotTitle.setY(GAP);
 		add(slotTitle);
-		refreshHat();
+
+		//Image
+		slot.setPos(GAP, slotTitle.height() + GAP * 2);
+		add(slot);
 
 		//Unequip Button
-		unequipButton = new RedButton(R.string.WndHats_UnequipButton) {
+        TextButton sb = new RedButton(R.string.WndHats_UnequipButton) {
 			@Override
 			protected void onClick() {
 				super.onClick();
 				Accessory.unequip();
-				refreshHat();
+				onBackPressed();
+				GameScene.show(new WndHats());
 			}
 		};
 
-		unequipButton.setRect(slot.getX() + slot.width() * 2 + GAP, slot.getY(), slot.width() * 2, slot.height() / 2);
-		unequipButton.setVisible(ExTool.isNotEmpty(equippedName));
-		add(unequipButton);
+		sb.setRect(slot.getX() + slot.width() * 2 + GAP, slot.getY(), slot.width() * 2, slot.height() / 2);
+
+		add(sb);
 
 		//List of Accessories
 		//Title
@@ -154,7 +145,7 @@ public class WndHats extends Window {
 
 					if (finalAccessory.haveIt()) {
 						finalAccessory.equip();
-						refreshHat();
+						onBackPressed();
 						return;
 					}
 					GameScene.show(new WndHatInfo(item, finalPrice));
@@ -184,44 +175,13 @@ public class WndHats extends Window {
 		list.setRect(0, topGap, WIDTH, HEIGHT - BottomGap);
 	}
 
-	private void refreshHat(){
-		EventCollector.logScene(getClass().getCanonicalName());
-
-		int yPos = 0;
-
-		String equippedName = Utils.EMPTY_STRING;
-
-		if (Accessory.equipped() != null) {
-			equippedName = ": " + Accessory.equipped().name();
-		}
-		if (unequipButton != null) {
-			unequipButton.setVisible(ExTool.isNotEmpty(equippedName));
-		}
-		String equipTitle;
-		if (equippedName.isEmpty()){
-			equipTitle = StringsManager.getVar(R.string.WndHats_NoSlotTitle);
-		}else{
-			equipTitle = StringsManager.getVar(R.string.WndHats_SlotTitle) + equippedName;
-		}
-		slotTitle.text(equipTitle);
-		updateSlotImage();
-	}
-
-	public void updateSlotImage() {
-		if (slot != null){
-			slot.remove();
-		}
+	public boolean updateSlotImage() {
 		if (Accessory.equipped() != null) {
 			slot = Accessory.equipped().getImage();
-			slot.setPos(GAP, slotTitle.height() + GAP * 2);
-			add(slot);
-			return;
+			return true;
 		} else {
-			Image tempSlot = Accessory.getSlotImage();
 			slot = Accessory.getSlotImage();
-			slot.setPos(GAP, slotTitle.height() + GAP * 2);
-			add(slot);
-			return;
+			return false;
 		}
 	}
 }

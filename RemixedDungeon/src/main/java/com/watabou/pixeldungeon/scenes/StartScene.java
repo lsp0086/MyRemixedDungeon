@@ -285,7 +285,6 @@ public class StartScene extends PixelScene {
         if (curShield != null) {
             curShield.highlight(false);
             GamesInProgress.delete(shield.cl);
-            Dungeon.setFacilitations(0);
         }
 
         curShield = shield;

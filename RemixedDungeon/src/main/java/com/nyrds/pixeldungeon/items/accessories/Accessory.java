@@ -7,7 +7,6 @@ import com.nyrds.platform.EventCollector;
 import com.nyrds.platform.game.RemixedDungeon;
 import com.nyrds.platform.storage.Preferences;
 import com.nyrds.platform.util.StringsManager;
-import com.nyrds.util.Util;
 import com.watabou.noosa.Image;
 import com.watabou.pixeldungeon.Dungeon;
 import com.watabou.pixeldungeon.actors.hero.Hero;
@@ -21,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lombok.Getter;
 import lombok.SneakyThrows;
 
 /**
@@ -35,7 +33,6 @@ public class Accessory {
 
     protected int image = 0;
 
-    @Getter
     protected static final String imageFile = "items/accessories.png";
 
     static final private Map<String, Class<? extends Accessory>> allAccessoriesList = new HashMap<>();
@@ -141,7 +138,7 @@ public class Accessory {
     }
 
     public boolean haveIt() {
-        return Util.isDebug() || GamePreferences.donated() == 4 || Preferences.INSTANCE.getString(prefProperty(), Utils.EMPTY_STRING).equals(getClass().getSimpleName());
+        return GamePreferences.donated() == 4 || Preferences.INSTANCE.getString(prefProperty(), Utils.EMPTY_STRING).equals(getClass().getSimpleName());
     }
 
     public void ownIt(boolean reallyOwn) {

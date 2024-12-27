@@ -11,9 +11,8 @@ public class Facilitations {
     public static final int FAST_REGENERATION = (int)Math.pow(2,16+1);
     public static final int FAST_MANA_REGENERATION = (int)Math.pow(2,16+2);
     public static final int SUPER_STRENGTH = (int)Math.pow(2,16+3);
-    public static final int FREE_BUSINESS = (int)Math.pow(2,16+4);
 
-    public static final int[] MASKS = {NO_HUNGER, FAST_REGENERATION, FAST_MANA_REGENERATION, SUPER_STRENGTH, FREE_BUSINESS};
+    public static final int[] MASKS = {NO_HUNGER, FAST_REGENERATION, FAST_MANA_REGENERATION, SUPER_STRENGTH};
 
     public static final Map<Integer, ArrayList<Integer>> conflictingChallenges = new HashMap<>();
 
