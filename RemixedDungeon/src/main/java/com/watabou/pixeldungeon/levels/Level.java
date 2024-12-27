@@ -762,7 +762,7 @@ public abstract class Level implements Bundlable {
 		}
 
 		for (Blob blob : bundle.getCollection(BLOBS, Blob.class)) {
-			blobs.put(blob.getClass(), blob);
+			blobPut(blob.getClass(), blob);
 		}
 
 		for (ScriptedActor actor : bundle.getCollection(SCRIPTS, ScriptedActor.class)) {
@@ -996,8 +996,8 @@ public abstract class Level implements Bundlable {
 	@LuaInterface
 	public int randomPassableCell() {
 		return getRandomTerrain((level, cell) -> level.passable[cell]
-		&& cell != level.entrance
-		&& Actor.findChar(cell) == null);
+				&& cell != level.entrance
+				&& Actor.findChar(cell) == null);
 	}
 
 
@@ -1145,7 +1145,7 @@ public abstract class Level implements Bundlable {
 	public void set(int cell, int terrain) {
 
 		if(!cellValid(cell)) {
-			EventCollector.logEvent(Utils.format("Attempt set invalid cell %d on %s to %d", cell, levelId, terrain));
+			EventCollector.logException(Utils.format("Attempt set invalid cell %d on %s to %d", cell, levelId, terrain));
 			return;
 		}
 
@@ -1294,7 +1294,7 @@ public abstract class Level implements Bundlable {
 
 	public void plant(Seed seed, int pos) {
 
-	    LevelObject lo = getTopLevelObject(pos);
+		LevelObject lo = getTopLevelObject(pos);
 
 		if (lo != null) {
 			lo.bump(seed);
@@ -1368,7 +1368,7 @@ public abstract class Level implements Bundlable {
 
 	protected void pressHero(int cell, Hero hero) {
 		if (TerrainFlags.is(map[cell], TerrainFlags.TRAP)) {
-            GLog.i(StringsManager.getVar(R.string.Level_HiddenPlate));
+			GLog.i(StringsManager.getVar(R.string.Level_HiddenPlate));
 			set(cell, Terrain.discover(map[cell]));
 			TrapHelper.heroPressed();
 		}
@@ -1477,9 +1477,9 @@ public abstract class Level implements Bundlable {
 
 	private void updateFovForObjectAt(int p) {
 		for (int a : NEIGHBOURS9) {
-            if(!cellValid(p+a)) {
-                continue;
-            }
+			if(!cellValid(p+a)) {
+				continue;
+			}
 			markFovCellSafe(p + a);
 		}
 	}
@@ -1582,8 +1582,8 @@ public abstract class Level implements Bundlable {
 	public String tileName(int tile) {
 
 		if (tile >= Terrain.WATER_TILES) {
-            return StringsManager.getVar(R.string.Level_TileWater);
-        }
+			return StringsManager.getVar(R.string.Level_TileWater);
+		}
 
 		if (tile != Terrain.CHASM && (TerrainFlags.flags[tile] & TerrainFlags.PIT) != 0) {
 			return tileName(Terrain.CHASM);
@@ -1591,8 +1591,8 @@ public abstract class Level implements Bundlable {
 
 		switch (tile) {
 			case Terrain.CHASM:
-                return StringsManager.getVar(R.string.Level_TileChasm);
-            case Terrain.EMPTY:
+				return StringsManager.getVar(R.string.Level_TileChasm);
+			case Terrain.EMPTY:
 			case Terrain.EMPTY_SP:
 			case Terrain.EMPTY_DECO:
 			case Terrain.SECRET_TOXIC_TRAP:
@@ -1601,69 +1601,69 @@ public abstract class Level implements Bundlable {
 			case Terrain.SECRET_POISON_TRAP:
 			case Terrain.SECRET_ALARM_TRAP:
 			case Terrain.SECRET_LIGHTNING_TRAP:
-                return StringsManager.getVar(R.string.Level_TileFloor);
-            case Terrain.GRASS:
-                return StringsManager.getVar(R.string.Level_TileGrass);
-            case Terrain.WALL:
+				return StringsManager.getVar(R.string.Level_TileFloor);
+			case Terrain.GRASS:
+				return StringsManager.getVar(R.string.Level_TileGrass);
+			case Terrain.WALL:
 			case Terrain.WALL_DECO:
 			case Terrain.SECRET_DOOR:
-                return StringsManager.getVar(R.string.Level_TileWall);
-            case Terrain.DOOR:
-                return StringsManager.getVar(R.string.Level_TileClosedDoor);
-            case Terrain.OPEN_DOOR:
-                return StringsManager.getVar(R.string.Level_TileOpenDoor);
-            case Terrain.ENTRANCE:
-                return StringsManager.getVar(R.string.Level_TileEntrance);
-            case Terrain.EXIT:
-                return StringsManager.getVar(R.string.Level_TileExit);
-            case Terrain.EMBERS:
-                return StringsManager.getVar(R.string.Level_TileEmbers);
-            case Terrain.LOCKED_DOOR:
-                return StringsManager.getVar(R.string.Level_TileLockedDoor);
-            case Terrain.PEDESTAL:
-                return StringsManager.getVar(R.string.Level_TilePedestal);
-            case Terrain.BARRICADE:
-                return StringsManager.getVar(R.string.Level_TileBarricade);
-            case Terrain.HIGH_GRASS:
-                return StringsManager.getVar(R.string.Level_TileHighGrass);
-            case Terrain.LOCKED_EXIT:
-                return StringsManager.getVar(R.string.Level_TileLockedExit);
-            case Terrain.UNLOCKED_EXIT:
-                return StringsManager.getVar(R.string.Level_TileUnlockedExit);
-            case Terrain.SIGN:
-                return StringsManager.getVar(R.string.Level_TileSign);
-            case Terrain.WELL:
-                return StringsManager.getVar(R.string.Level_TileWell);
-            case Terrain.EMPTY_WELL:
-                return StringsManager.getVar(R.string.Level_TileEmptyWell);
-            case Terrain.STATUE:
+				return StringsManager.getVar(R.string.Level_TileWall);
+			case Terrain.DOOR:
+				return StringsManager.getVar(R.string.Level_TileClosedDoor);
+			case Terrain.OPEN_DOOR:
+				return StringsManager.getVar(R.string.Level_TileOpenDoor);
+			case Terrain.ENTRANCE:
+				return StringsManager.getVar(R.string.Level_TileEntrance);
+			case Terrain.EXIT:
+				return StringsManager.getVar(R.string.Level_TileExit);
+			case Terrain.EMBERS:
+				return StringsManager.getVar(R.string.Level_TileEmbers);
+			case Terrain.LOCKED_DOOR:
+				return StringsManager.getVar(R.string.Level_TileLockedDoor);
+			case Terrain.PEDESTAL:
+				return StringsManager.getVar(R.string.Level_TilePedestal);
+			case Terrain.BARRICADE:
+				return StringsManager.getVar(R.string.Level_TileBarricade);
+			case Terrain.HIGH_GRASS:
+				return StringsManager.getVar(R.string.Level_TileHighGrass);
+			case Terrain.LOCKED_EXIT:
+				return StringsManager.getVar(R.string.Level_TileLockedExit);
+			case Terrain.UNLOCKED_EXIT:
+				return StringsManager.getVar(R.string.Level_TileUnlockedExit);
+			case Terrain.SIGN:
+				return StringsManager.getVar(R.string.Level_TileSign);
+			case Terrain.WELL:
+				return StringsManager.getVar(R.string.Level_TileWell);
+			case Terrain.EMPTY_WELL:
+				return StringsManager.getVar(R.string.Level_TileEmptyWell);
+			case Terrain.STATUE:
 			case Terrain.STATUE_SP:
-                return StringsManager.getVar(R.string.Level_TileStatue);
-            case Terrain.TOXIC_TRAP:
-                return StringsManager.getVar(R.string.Level_TileToxicTrap);
-            case Terrain.FIRE_TRAP:
-                return StringsManager.getVar(R.string.Level_TileFireTrap);
-            case Terrain.PARALYTIC_TRAP:
-                return StringsManager.getVar(R.string.Level_TileParalyticTrap);
-            case Terrain.POISON_TRAP:
-                return StringsManager.getVar(R.string.Level_TilePoisonTrap);
-            case Terrain.ALARM_TRAP:
-                return StringsManager.getVar(R.string.Level_TileAlarmTrap);
-            case Terrain.LIGHTNING_TRAP:
-                return StringsManager.getVar(R.string.Level_TileLightningTrap);
-            case Terrain.GRIPPING_TRAP:
-                return StringsManager.getVar(R.string.Level_TileGrippingTrap);
-            case Terrain.SUMMONING_TRAP:
-                return StringsManager.getVar(R.string.Level_TileSummoningTrap);
-            case Terrain.INACTIVE_TRAP:
-                return StringsManager.getVar(R.string.Level_TileInactiveTrap);
-            case Terrain.BOOKSHELF:
-                return StringsManager.getVar(R.string.Level_TileBookshelf);
-            case Terrain.ALCHEMY:
-                return StringsManager.getVar(R.string.Level_TileAlchemy);
-            default:
-                return StringsManager.getVar(R.string.Level_TileDefault);
-        }
+				return StringsManager.getVar(R.string.Level_TileStatue);
+			case Terrain.TOXIC_TRAP:
+				return StringsManager.getVar(R.string.Level_TileToxicTrap);
+			case Terrain.FIRE_TRAP:
+				return StringsManager.getVar(R.string.Level_TileFireTrap);
+			case Terrain.PARALYTIC_TRAP:
+				return StringsManager.getVar(R.string.Level_TileParalyticTrap);
+			case Terrain.POISON_TRAP:
+				return StringsManager.getVar(R.string.Level_TilePoisonTrap);
+			case Terrain.ALARM_TRAP:
+				return StringsManager.getVar(R.string.Level_TileAlarmTrap);
+			case Terrain.LIGHTNING_TRAP:
+				return StringsManager.getVar(R.string.Level_TileLightningTrap);
+			case Terrain.GRIPPING_TRAP:
+				return StringsManager.getVar(R.string.Level_TileGrippingTrap);
+			case Terrain.SUMMONING_TRAP:
+				return StringsManager.getVar(R.string.Level_TileSummoningTrap);
+			case Terrain.INACTIVE_TRAP:
+				return StringsManager.getVar(R.string.Level_TileInactiveTrap);
+			case Terrain.BOOKSHELF:
+				return StringsManager.getVar(R.string.Level_TileBookshelf);
+			case Terrain.ALCHEMY:
+				return StringsManager.getVar(R.string.Level_TileAlchemy);
+			default:
+				return StringsManager.getVar(R.string.Level_TileDefault);
+		}
 	}
 
 	@LuaInterface
@@ -1671,27 +1671,27 @@ public abstract class Level implements Bundlable {
 
 		switch (tile) {
 			case Terrain.CHASM:
-                return StringsManager.getVar(R.string.Level_TileDescChasm);
-            case Terrain.WATER:
-                return StringsManager.getVar(R.string.Level_TileDescWater);
-            case Terrain.ENTRANCE:
-                return StringsManager.getVar(R.string.Level_TileDescEntrance);
-            case Terrain.EXIT:
+				return StringsManager.getVar(R.string.Level_TileDescChasm);
+			case Terrain.WATER:
+				return StringsManager.getVar(R.string.Level_TileDescWater);
+			case Terrain.ENTRANCE:
+				return StringsManager.getVar(R.string.Level_TileDescEntrance);
+			case Terrain.EXIT:
 			case Terrain.UNLOCKED_EXIT:
-                return StringsManager.getVar(R.string.Level_TileDescExit);
-            case Terrain.EMBERS:
-                return StringsManager.getVar(R.string.Level_TileDescEmbers);
-            case Terrain.HIGH_GRASS:
-                return StringsManager.getVar(R.string.Level_TileDescHighGrass);
-            case Terrain.LOCKED_DOOR:
-                return StringsManager.getVar(R.string.Level_TileDescLockedDoor);
-            case Terrain.LOCKED_EXIT:
-                return StringsManager.getVar(R.string.Level_TileDescLockedExit);
-            case Terrain.BARRICADE:
-                return StringsManager.getVar(R.string.Level_TileDescBarricade);
-            case Terrain.SIGN:
-                return StringsManager.getVar(R.string.Level_TileDescSign);
-            case Terrain.TOXIC_TRAP:
+				return StringsManager.getVar(R.string.Level_TileDescExit);
+			case Terrain.EMBERS:
+				return StringsManager.getVar(R.string.Level_TileDescEmbers);
+			case Terrain.HIGH_GRASS:
+				return StringsManager.getVar(R.string.Level_TileDescHighGrass);
+			case Terrain.LOCKED_DOOR:
+				return StringsManager.getVar(R.string.Level_TileDescLockedDoor);
+			case Terrain.LOCKED_EXIT:
+				return StringsManager.getVar(R.string.Level_TileDescLockedExit);
+			case Terrain.BARRICADE:
+				return StringsManager.getVar(R.string.Level_TileDescBarricade);
+			case Terrain.SIGN:
+				return StringsManager.getVar(R.string.Level_TileDescSign);
+			case Terrain.TOXIC_TRAP:
 			case Terrain.FIRE_TRAP:
 			case Terrain.PARALYTIC_TRAP:
 			case Terrain.POISON_TRAP:
@@ -1699,17 +1699,17 @@ public abstract class Level implements Bundlable {
 			case Terrain.LIGHTNING_TRAP:
 			case Terrain.GRIPPING_TRAP:
 			case Terrain.SUMMONING_TRAP:
-                return StringsManager.getVar(R.string.Level_TileDescTrap);
-            case Terrain.INACTIVE_TRAP:
-                return StringsManager.getVar(R.string.Level_TileDescInactiveTrap);
-            case Terrain.STATUE:
+				return StringsManager.getVar(R.string.Level_TileDescTrap);
+			case Terrain.INACTIVE_TRAP:
+				return StringsManager.getVar(R.string.Level_TileDescInactiveTrap);
+			case Terrain.STATUE:
 			case Terrain.STATUE_SP:
-                return StringsManager.getVar(R.string.Level_TileDescStatue);
-            case Terrain.ALCHEMY:
-                return StringsManager.getVar(R.string.Level_TileDescAlchemy);
-            case Terrain.EMPTY_WELL:
-                return StringsManager.getVar(R.string.Level_TileDescEmptyWell);
-            default:
+				return StringsManager.getVar(R.string.Level_TileDescStatue);
+			case Terrain.ALCHEMY:
+				return StringsManager.getVar(R.string.Level_TileDescAlchemy);
+			case Terrain.EMPTY_WELL:
+				return StringsManager.getVar(R.string.Level_TileDescEmptyWell);
+			default:
 				if (tile >= Terrain.WATER_TILES) {
 					return tileDesc(Terrain.WATER);
 				}
@@ -1926,7 +1926,7 @@ public abstract class Level implements Bundlable {
 				}
 			}
 		}
-		blobs.put(blobClass, blob);
+		blobPut(blobClass, blob);
 	}
 
 	public void clearAreaFrom(Class<? extends Blob> blobClass, int cell, int xs, int ys) {
@@ -2139,5 +2139,10 @@ public abstract class Level implements Bundlable {
 			}
 		}
 		return false;
+	}
+
+	public void blobPut(Class<? extends Blob> clazz, Blob blob) {
+		Actor.add(blob);
+		blobs.put(clazz, blob);
 	}
 }

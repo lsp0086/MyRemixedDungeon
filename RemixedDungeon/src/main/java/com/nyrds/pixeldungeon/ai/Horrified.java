@@ -1,9 +1,9 @@
 package com.nyrds.pixeldungeon.ai;
 
 import com.nyrds.pixeldungeon.mechanics.NamedEntityKind;
+import com.nyrds.pixeldungeon.mechanics.buffs.BuffFactory;
 import com.nyrds.pixeldungeon.ml.R;
 import com.nyrds.pixeldungeon.utils.CharsList;
-import com.watabou.pixeldungeon.actors.Actor;
 import com.watabou.pixeldungeon.actors.Char;
 import com.watabou.pixeldungeon.actors.buffs.Terror;
 import com.watabou.pixeldungeon.actors.mobs.Mob;
@@ -19,7 +19,7 @@ public class Horrified extends MobAi implements AiState{
     @Override
     public void act(@NotNull Char me) {
 
-        if(!me.hasBuff(Terror.class)) {
+        if(!me.hasBuff(BuffFactory.TERROR)) {
             me.showStatus(CharSprite.NEGATIVE, Mob.TXT_RAGE);
             me.setState(MobAi.getStateByClass(Hunting.class));
             return;
@@ -36,9 +36,7 @@ public class Horrified extends MobAi implements AiState{
             sourceOfFear = me.getNearestEnemy();
         }
 
-        if(!me.doStepFrom(sourceOfFear.getPos())) {
-            me.spend(Actor.TICK);
-        }
+        me.doStepFrom(sourceOfFear.getPos());
     }
 
     @Override
@@ -49,15 +47,15 @@ public class Horrified extends MobAi implements AiState{
     @Override
     public String status(Char me) {
 
-        if(me.hasBuff(Terror.class)) {
+        if(me.hasBuff(BuffFactory.TERROR)) {
             Terror terror = me.buff(Terror.class);
 
-                NamedEntityKind src = terror.getSource();
+            NamedEntityKind src = terror.getSource();
 
-                if (src instanceof Char) {
-                    return Utils.format(R.string.Mob_StaTerrorStatus2,
-                            me.getName(), ((Char) src).getName_objective());
-                }
+            if (src instanceof Char) {
+                return Utils.format(R.string.Mob_StaTerrorStatus2,
+                        me.getName(), ((Char) src).getName_objective());
+            }
         }
 
         return Utils.format(R.string.Mob_StaTerrorStatus,

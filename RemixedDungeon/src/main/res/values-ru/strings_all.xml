@@ -2887,7 +2887,7 @@ No, there was no place for her in the light, not anymore. She turned from the me
   <string name="Damage_Reduction">Снижение урона</string>
   <string name="Attack_Range">Дальность атаки</string>
   <string name="Movement_Speed">Скорость передвижения</string>
-  <string name="Attack_Cooldown">Стоимость атаки</string>
+  <string name="Attack_Cooldown">Задержка между атаками</string>
   <string name="View_Distance">Дальность обзора</string>
   <string name="WndHero_Info">Инфо</string>
   <string name="ChaosShield_name">Щит Хаоса</string>

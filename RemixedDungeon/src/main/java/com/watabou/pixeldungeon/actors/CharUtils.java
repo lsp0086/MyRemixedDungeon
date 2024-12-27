@@ -117,7 +117,7 @@ public class CharUtils {
         }
 
         if (enemy.level().water[enemy.getPos()] && !enemy.isFlying()) {
-            damage *= 2f;
+            damage *= 2;
         }
 
         enemy.damage(damage, LightningTrap.LIGHTNING);
@@ -224,11 +224,16 @@ public class CharUtils {
 
     @NotNull
     public static CharAction actionForCell(@NonNull Char actor, int cell, @NotNull Level level) {
-        final Char target = Actor.findChar(cell);
+        Char target = null;
+
+        if (level.fieldOfView[cell]) {
+            target = Actor.findChar(cell);
+        }
+
         final Char controlTarget = actor.getControlTarget();
 
 
-        if (controlTarget instanceof Hero && (target == null || target.friendly(controlTarget)) ) {
+        if (controlTarget instanceof Hero && (target == null || target.friendly(controlTarget))) {
             CharAction charAction = handleObjectOrHeap(actor, cell, level);
             if (charAction != null) return charAction;
 
@@ -245,7 +250,7 @@ public class CharUtils {
             }
         }
 
-        if (level.fieldOfView[cell] && target != null && target != controlTarget) {
+        if (target != null && target != controlTarget) {
             if (target.friendly(controlTarget)) {
                 return new Interact(target);
             } else {
@@ -303,34 +308,25 @@ public class CharUtils {
     }
 
     public static void execute(Char target, Char hero, @NotNull String action) {
-        if (action.equals(CommonActions.MAC_STEAL)) {
-            hero.nextAction(new Steal(target));
-            return;
-        }
-
-        if (action.equals(CommonActions.MAC_TAUNT)) {
-            hero.nextAction(new Taunt(target));
-            return;
-        }
-
-        if (action.equals(CommonActions.MAC_PUSH)) {
-            hero.nextAction(new Push(target));
-            return;
-        }
-
-        if (action.equals(CommonActions.MAC_HIT)) {
-            hero.nextAction(new Attack(target));
-            return;
-        }
-
-        if (action.equals(CommonActions.MAC_ORDER)) {
-            hero.nextAction(new Order(target));
-            return;
-        }
-
-        if(action.equals(CommonActions.MAC_EXPEL)){
-            hero.nextAction(new Expel(target));
-            return;
+        switch (action) {
+            case CommonActions.MAC_STEAL:
+                hero.nextAction(new Steal(target));
+                return;
+            case CommonActions.MAC_TAUNT:
+                hero.nextAction(new Taunt(target));
+                return;
+            case CommonActions.MAC_PUSH:
+                hero.nextAction(new Push(target));
+                return;
+            case CommonActions.MAC_HIT:
+                hero.nextAction(new Attack(target));
+                return;
+            case CommonActions.MAC_ORDER:
+                hero.nextAction(new Order(target));
+                return;
+            case CommonActions.MAC_EXPEL:
+                hero.nextAction(new Expel(target));
+                return;
         }
 
         target.getScript().run("executeAction", target, action);
@@ -466,39 +462,50 @@ public class CharUtils {
         Heap oldHeap = item.getHeap();
 
         int heapPos = hero.getPos();
-        if (oldHeap!= null) {
-            heapPos  = oldHeap.pos;
+        if (oldHeap != null) {
+            heapPos = oldHeap.pos;
         }
 
         item = item.pick(hero, hero.getPos());
 
-        if (item.doPickUp(hero)) {
-
-            hero.itemPickedUp(item);
-
-            if (oldHeap != null) {
-                oldHeap.pickUp();
-                if (!oldHeap.isEmpty()) {
-                    GLog.i(StringsManager.getVar(R.string.Hero_SomethingElse));
-                }
-            }
-
+        if (!item.valid()) {
+            removeFromHeap(oldHeap);
         } else {
-            Heap newHeap = hero.level().drop(item, heapPos);
+            if (item.doPickUp(hero)) {
 
-            newHeap.sprite.drop();
-            newHeap.pickUpFailed();
+                hero.itemPickedUp(item);
+
+                removeFromHeap(oldHeap);
+                item.pickedUp(hero);
+
+            } else {
+                Heap newHeap = hero.level().drop(item, heapPos);
+
+                newHeap.sprite.drop();
+                newHeap.pickUpFailed();
+            }
         }
+
         hero.readyAndIdle();
     }
 
+    private static void removeFromHeap(Heap oldHeap) {
+        if (oldHeap != null) {
+            oldHeap.pickUp();
+            if (!oldHeap.isEmpty()) {
+                GLog.i(StringsManager.getVar(R.string.Hero_SomethingElse));
+            }
+        }
+    }
+
     static public final Set<Image> markers = new HashSet<>();
+
     static public void mark(Char chr) {
         var marker = Icons.TARGET.get();
         chr.getSprite().getParent().add(marker);
 
         marker.point(DungeonTilemap.tileToWorld(chr.getPos()));
-        marker.y+=chr.getSprite().visualOffsetY();
+        marker.y += chr.getSprite().visualOffsetY();
         markers.add(marker);
     }
 
@@ -510,7 +517,7 @@ public class CharUtils {
     }
 
     static public void clearMarkers() {
-        for(var marker: markers) {
+        for (var marker : markers) {
             marker.killAndErase();
         }
         markers.clear();
@@ -519,27 +526,29 @@ public class CharUtils {
     public static @NonNull Item tryToSpawnMimic(Item item, Char ch, int pos, String mimicKind) {
         Level level = ch.level();
 
-        int spawnPos = pos;
+        for (int i = 0; i < item.quantity();i++) {
+            int spawnPos = pos;
 
-        if(ch.getPos() == pos) {
-            spawnPos = level.getEmptyCellNextTo(ch.getPos());
+            if (ch.getPos() == pos) {
+                spawnPos = level.getEmptyCellNextTo(ch.getPos());
 
-            if (!level.cellValid(spawnPos)) {
-                return item;
+                if (!level.cellValid(spawnPos)) {
+                    return item;
+                }
             }
+
+            Mob mimic = MobFactory.mobByName(mimicKind);
+            mimic.setPos(spawnPos);
+            mimic.setState(MobAi.getStateByClass(Wandering.class));
+            mimic.adjustStats(Dungeon.depth);
+
+            level.spawnMob(mimic);
+            ch.checkVisibleEnemies();
+
+            CellEmitter.get(pos).burst(Speck.factory(Speck.STAR), 10);
+            Sample.INSTANCE.play(Assets.SND_MIMIC);
+            item.quantity(item.quantity()-1);
         }
-
-        Mob mimic = MobFactory.mobByName(mimicKind);
-        mimic.setPos(spawnPos);
-        mimic.setState(MobAi.getStateByClass(Wandering.class));
-        mimic.adjustStats(Dungeon.depth);
-
-        level.spawnMob( mimic );
-        ch.checkVisibleEnemies();
-
-        CellEmitter.get(pos).burst( Speck.factory( Speck.STAR ), 10 );
-        Sample.INSTANCE.play( Assets.SND_MIMIC );
-
         return ItemsList.DUMMY;
     }
 }

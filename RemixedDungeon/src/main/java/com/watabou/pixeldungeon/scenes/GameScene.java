@@ -213,9 +213,9 @@ public class GameScene extends PixelScene {
         String logicTilesAtlas = level.getProperty("tiles_logic", "");
 
         if(!logicTilesAtlas.isEmpty()) {
-			logicTiles = new ClassicDungeonTilemap(level,logicTilesAtlas);
-			terrain.add(logicTiles);
-		}
+            logicTiles = new ClassicDungeonTilemap(level,logicTilesAtlas);
+            terrain.add(logicTiles);
+        }
 
         if (!level.customTiles()) {
             baseTiles = DungeonTilemap.factory(level);
@@ -403,6 +403,7 @@ public class GameScene extends PixelScene {
         InterlevelScene.Mode appearMode = InterlevelScene.mode;
         InterlevelScene.mode = InterlevelScene.Mode.CONTINUE;
 
+        Actor.add(hero);
         hero.regenSprite();
         //it is a chance for another level change right here if level entrance is at CHASM for example
         switch (appearMode) {
@@ -445,7 +446,9 @@ public class GameScene extends PixelScene {
         mapBuildingComplete = true; // Epic level gen compatibility speedup
         updateMap();
 
+
         fadeIn();
+        Actor.fixTime();
 
         Dungeon.observe();
         hero.updateSprite();
@@ -993,9 +996,9 @@ public class GameScene extends PixelScene {
     public static void addMobSpriteDirect(Char chr,CharSprite sprite) {
         if (isSceneReady()) {
             if(chr.getWalkingType() == WalkingType.WALL || chr.getWalkingType() == WalkingType.ABSOLUTE) {
-                    scene.topMobs.add(sprite);
+                scene.topMobs.add(sprite);
             } else {
-                    scene.mobs.add(sprite);
+                scene.mobs.add(sprite);
             }
         }
     }

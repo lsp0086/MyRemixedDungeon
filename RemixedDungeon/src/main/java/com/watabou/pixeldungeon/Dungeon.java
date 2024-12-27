@@ -218,8 +218,7 @@ public class Dungeon {
 
     @Contract(pure = true)
     public static boolean isFacilitated(int mask) {
-        int result = (facilitations & mask);
-        return result != 0;
+        return (facilitations & mask) != 0;
     }
 
     private static void updateStatistics() {
@@ -632,8 +631,7 @@ public class Dungeon {
 
         realtime = bundle.getBoolean(REALTIME);
         setChallenges(bundle.optInt(CHALLENGES, 0));
-        int facilitations = bundle.optInt(FACILITATIONS, 0);
-        setFacilitations(facilitations);
+        setFacilitations(bundle.optInt(FACILITATIONS, 0));
 
         if (fullLoad) {
             chapters = new HashSet<>();
@@ -882,7 +880,12 @@ public class Dungeon {
                 return Level.INVALID_CELL;
             }
 
-            Char chr = Actor.findChar(to);
+            Char chr = null;
+
+            if (level.fieldOfView[to]) {
+                chr = Actor.findChar(to);
+            }
+
 
             if (chr instanceof Mob) {
                 Mob mob = (Mob) chr;

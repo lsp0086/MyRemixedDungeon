@@ -81,9 +81,9 @@ public class EventCollector {
         ps.close();
         GLog.toFile(baos.toString());
 
-        if (Util.isDebug()) {
-            throw new RuntimeException(new Exception(e));
-        }
+//        if (Util.isDebug()) {
+//            throw new RuntimeException(new Exception(e));
+//        }
     }
 
     static public void logException(Throwable e) {

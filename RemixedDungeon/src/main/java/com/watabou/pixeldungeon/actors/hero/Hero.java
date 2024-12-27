@@ -99,8 +99,6 @@ public class Hero extends Char {
     private static final float TIME_TO_REST = 1f;
     private static final float TIME_TO_SEARCH = 2f;
 
-    public boolean isFree = false;
-
     @Nullable
     static public Runnable doOnNextAction;
 
@@ -110,6 +108,8 @@ public class Hero extends Char {
     private HeroSubClass subClass = HeroSubClass.NONE;
 
     private boolean ready = false;
+
+    public boolean isFree = false;
 
     @Packable(defaultValue = "-1")//EntityIdSource.INVALID_ID
     private int controlTargetId;
@@ -267,10 +267,6 @@ public class Hero extends Char {
         return (int) (super.attackSkill(target) * attackSkillFactor);
     }
 
-    @Override
-    public void spend(float time) {
-        super.spend(time);
-    }
 
     @Override
     public int dr() {
@@ -406,8 +402,13 @@ public class Hero extends Char {
 
     @Override
     public void damage(int dmg, @NotNull NamedEntityKind src) {
+        if (!isAlive()) {
+            return;
+        }
+
         restoreHealth = false;
         super.damage(dmg, src);
+
 
         setControlTarget(this);
 

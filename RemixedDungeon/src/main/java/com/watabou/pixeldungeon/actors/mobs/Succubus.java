@@ -1,7 +1,6 @@
 
 package com.watabou.pixeldungeon.actors.mobs;
 
-import com.watabou.pixeldungeon.actors.Actor;
 import com.watabou.pixeldungeon.actors.Char;
 import com.watabou.pixeldungeon.actors.CharUtils;
 import com.watabou.pixeldungeon.actors.buffs.Buff;
@@ -32,6 +31,7 @@ public class Succubus extends Mob {
 
 		expForKill = 12;
 		maxLvl = 25;
+		carcassChance = 0;
 
 		loot(new ScrollOfLullaby(), 0.05f);
 
@@ -65,7 +65,6 @@ public class Succubus extends Mob {
 
 	@Override
     public boolean getCloser(int target,  boolean ignorePets) {
-		spend(Actor.MICRO_TICK);
 		if (level().fieldOfView[target] && level().distance(getPos(), target) > 2 && delay <= 0) {
 			CharUtils.blinkTo(this, target);
 			delay = BLINK_DELAY;

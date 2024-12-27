@@ -174,7 +174,7 @@ public class CharSprite extends CompositeMovieClip implements Tweener.Listener, 
         if (getVisible()) {
             ch.ifPresent(
                     chr -> {
-                            SystemFloatingText.show(getX() + width * charScale * 0.5f, getY(), chr.getPos(), text, color);
+                        SystemFloatingText.show(getX() + width * charScale * 0.5f, getY(), chr.getPos(), text, color);
                     }
             );
         }
@@ -191,7 +191,9 @@ public class CharSprite extends CompositeMovieClip implements Tweener.Listener, 
     }
 
     public void idle() {
-        play(idle);
+        if(curAnim==null || curAnim==run) {
+            play(idle);
+        }
     }
 
     @LuaInterface
@@ -437,7 +439,7 @@ public class CharSprite extends CompositeMovieClip implements Tweener.Listener, 
                     alpha(alpha);
                 }
             }
-                break;
+            break;
             case PARALYSED:
                 paused = false;
                 break;
@@ -533,7 +535,7 @@ public class CharSprite extends CompositeMovieClip implements Tweener.Listener, 
 
             int chrPos = chr.getPos();
             if(!isMoving && cellIndex!= chrPos) {
-                EventCollector.logEvent(Utils.format("CharSprite desync %s (%d not %d)", chr.getEntityKind(), cellIndex, chrPos));
+                EventCollector.logException(Utils.format("CharSprite desync %s (%d not %d)", chr.getEntityKind(), cellIndex, chrPos));
                 place(chrPos);
             }
         });

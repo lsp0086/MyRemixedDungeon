@@ -187,13 +187,6 @@ public abstract class Mob extends Char {
 
     @Override
     public boolean act() {
-/*
-    	if(Util.isDebug() && !(this instanceof NPC) && !getEntityKind().contains("NPC") && !getEntityKind().contains("Npc")) {
-    		if(!(baseAttackSkill > 0 && baseDefenseSkill > 0)) {
-    			throw new RuntimeException(Utils.format("bad params for %s", getEntityKind()));
-			}
-		}
-*/
         super.act(); //Calculate FoV
 
         getSprite().hideAlert();
@@ -205,16 +198,33 @@ public abstract class Mob extends Char {
         }
 
         float timeBeforeAct = actorTime();
+        StringBuilder tags = new StringBuilder();
+
+        String aiTag = getState().getTag();
+
+        tags.append(aiTag);
+
+        int tryCount = 5;
+        for (int i = 0;i < tryCount;i++) {
+            GLog.debug("%s is %s", getEntityKind(), getState().getTag());
+            getState().act(this);
+            if(actorTime() != timeBeforeAct) {
+                return true;
+            }
+            String newTag = getState().getTag();
+            if(aiTag.equals(newTag)) { //mob decided to do nothing, this is ok
+                spend(TICK);
+                return true;
+            }
+            aiTag = newTag;
+            tags.append(aiTag);
+        }
 
 
-        //GLog.debug("%s is %s", getEntityKind(), getState().getTag());
-        getState().act(this);
+        var error = String.format("actor %s get really confused!", getEntityKind(), tags);
+        spend(TICK);
+        EventCollector.logException(error);
 
-		if(actorTime() == timeBeforeAct) {
-			var error = String.format("actor %s has same timestamp after %s act!", getEntityKind(), getState().getTag());
-            spend(TICK);
-            EventCollector.logException(error);
-		}
         return true;
     }
 
@@ -275,7 +285,10 @@ public abstract class Mob extends Char {
 
     @Override
     public final void onZapComplete() {
-        zap(getEnemy());
+        Char enemy = getEnemy();
+        if(enemy.valid()) {
+            zap(enemy);
+        }
         super.onZapComplete();
     }
 
@@ -287,12 +300,8 @@ public abstract class Mob extends Char {
 
     @Override
     public void destroy() {
-
-        spend(MICRO_TICK);
-
-        super.destroy();
-
         level().mobs.remove(this);
+        super.destroy();
     }
 
     public void remove() {
@@ -300,10 +309,6 @@ public abstract class Mob extends Char {
     }
 
     public void die(@NotNull NamedEntityKind cause) {
-
-        spend(Actor.MICRO_TICK);
-
-
         Badges.validateRare(this);
 
         Hero hero = Dungeon.hero;
@@ -445,7 +450,7 @@ public abstract class Mob extends Char {
     public boolean friendly(@NotNull Char chr, int r_level) {
 
         if (r_level > 7) {
-            EventCollector.logEvent("too high r_level in Mob::friendly");
+            EventCollector.logException("too high r_level in Mob::friendly");
             return false;
         }
 

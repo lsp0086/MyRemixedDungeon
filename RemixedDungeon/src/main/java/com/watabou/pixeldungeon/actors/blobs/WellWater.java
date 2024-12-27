@@ -15,11 +15,11 @@ import com.watabou.utils.Bundle;
 public class WellWater extends Blob {
 
 	protected int pos;
-	
+
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle( bundle );
-		
+
 		for (int i=0; i < getLength(); i++) {
 			if (cur[i] > 0) {
 				pos = i;
@@ -27,11 +27,11 @@ public class WellWater extends Blob {
 			}
 		}
 	}
-	
+
 	@Override
 	protected void evolve() {
 		setVolume(off[pos] = cur[pos]);
-		
+
 		if (Dungeon.isCellVisible(pos)) {
 			if (this instanceof WaterOfAwareness) {
 				Journal.add( Feature.WELL_OF_AWARENESS.desc() );
@@ -53,7 +53,7 @@ public class WellWater extends Blob {
 		if (pos == hero.getPos() && affectHero(hero)) {
 			setVolume(off[pos] = cur[pos] = 0);
 			return true;
-			
+
 		} else {
 			final Level level = Dungeon.level;
 
@@ -71,7 +71,7 @@ public class WellWater extends Blob {
 							heap.replace( oldItem, newItem );
 						}
 					}
-					heap.sprite.link();
+					heap.sprite.link(heap);
 					setVolume(off[pos] = cur[pos] = 0);
 					return true;
 				} else {
@@ -83,15 +83,15 @@ public class WellWater extends Blob {
 			}
 		}
 	}
-	
+
 	protected boolean affectHero( Hero hero ) {
 		return false;
 	}
-	
+
 	protected Item affectItem( Item item ) {
 		return null;
 	}
-	
+
 	@Override
 	public void seed( int cell, int amount ) {
 		checkSeedCell(cell);

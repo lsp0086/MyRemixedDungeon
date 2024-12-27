@@ -65,11 +65,11 @@ public class Button extends Component {
 		};
 		add( hotArea );
 	}
-	
+
 	@Override
 	public void update() {
 		super.update();
-		
+
 		hotArea.setActive(getVisible());
 
 		if (pressed && ((pressTime += GameLoop.elapsed) >= longClick)) {
@@ -84,13 +84,17 @@ public class Button extends Component {
 			}
 		}
 	}
-	
+
 	protected void onTouchDown() {}
 	protected void onTouchUp() {}
 	protected void onClick() {}
-	
+
 	protected boolean onLongClick() {
 		return false;
+	}
+
+	public void simulateClick() {
+		onClick();
 	}
 
 	@Override

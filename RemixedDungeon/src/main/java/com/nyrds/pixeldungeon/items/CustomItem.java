@@ -271,10 +271,10 @@ public class CustomItem extends EquipableItem {
 
     public void attackProc(Char attacker, Char defender, int damage ) {
         script.runOptionalNoRet("attackProc",
-                    attacker,
-                    defender,
-                    damage
-                );
+                attacker,
+                defender,
+                damage
+        );
     }
 
     public int defenceProc(Char attacker, Char defender, int damage ) {
@@ -389,6 +389,10 @@ public class CustomItem extends EquipableItem {
     public boolean doPickUp(@NotNull Char hero) {
         script.runOptionalNoRet("onPickUp", hero);
         return super.doPickUp(hero);
+    }
+
+    public void pickedUp(@NotNull Char hero) {
+        script.runOptionalNoRet("pickedUp", hero);
     }
 
     @Override

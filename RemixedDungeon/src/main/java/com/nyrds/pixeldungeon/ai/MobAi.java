@@ -117,7 +117,7 @@ public abstract class MobAi implements AiState {
                     int candidateDist = me.level().distance(me.getPos(), chr.getPos());
                     if (candidateDist < dist) {
                         if(Random.Int((int) ((candidateDist + chr.stealth())/attentionFactor
-                                                        + (chr.isFlying() ? 2 : 0))) == 0) {
+                                + (chr.isFlying() ? 2 : 0))) == 0) {
                             bestEnemy = chr;
                             dist = candidateDist;
                         }
@@ -159,10 +159,12 @@ public abstract class MobAi implements AiState {
         final int ownerPos = me.getOwnerPos();
 
         if(     level.distance(me.getPos(), ownerPos)>maxDist
-            &&  level.distance(me.getTarget(), ownerPos)>maxDist
+                &&  level.distance(me.getTarget(), ownerPos)>maxDist
         ) {
             me.setTarget(ownerPos);
             me.setState(getStateByClass(Wandering.class));
+
+            me.doStepTo(me.getTarget());
             return true;
         }
         return false;

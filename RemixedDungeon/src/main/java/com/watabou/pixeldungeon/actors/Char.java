@@ -76,6 +76,7 @@ import com.watabou.pixeldungeon.scenes.CellSelector;
 import com.watabou.pixeldungeon.scenes.GameScene;
 import com.watabou.pixeldungeon.scenes.InterlevelScene;
 import com.watabou.pixeldungeon.sprites.CharSprite;
+import com.watabou.pixeldungeon.sprites.DummySprite;
 import com.watabou.pixeldungeon.sprites.Glowing;
 import com.watabou.pixeldungeon.ui.QuickSlot;
 import com.watabou.pixeldungeon.utils.GLog;
@@ -138,7 +139,6 @@ public abstract class Char extends Actor implements HasPositionOnLevel, Presser,
     protected AiState state = MobAi.getStateByClass(Sleeping.class);
 
     private Belongings belongings;
-
 
     @Packable(defaultValue = "-1")//EntityIdSource.INVALID_ID
     private int owner = EntityIdSource.INVALID_ID;
@@ -438,9 +438,9 @@ public abstract class Char extends Actor implements HasPositionOnLevel, Presser,
                 Sample.INSTANCE.play(Assets.SND_HIT, 1, 1, Random.Float(0.8f, 1.25f));
 
                 final CharSprite enemySprite = enemy.getSprite();
+                final CharSprite mySprite = getSprite();
 
-                enemySprite.bloodBurstA(
-                        getSprite().center(), effectiveDamage);
+                enemySprite.bloodBurstA(mySprite.center(), effectiveDamage);
                 enemySprite.flash();
             }
 
@@ -866,8 +866,8 @@ public abstract class Char extends Actor implements HasPositionOnLevel, Presser,
     }
 
     @Override
-    public void spend(float time) {
-        float scaledTime = time * timeScale();
+    public void spend(float d_t) {
+        float scaledTime = d_t * timeScale();
 
         for (Item item : getBelongings()) {
             if (item instanceof IActingItem && item.isEquipped(this)) {
@@ -1025,7 +1025,7 @@ public abstract class Char extends Actor implements HasPositionOnLevel, Presser,
         Hunger hunger = buff(Hunger.class);
 
         if (hunger == null) {
-            EventCollector.logEvent("null hunger on alive Char!");
+            EventCollector.logEvent("null_hunger_on_alive_char");
             hunger = new Hunger();
             hunger.attachTo(this);
         }
@@ -1108,20 +1108,21 @@ public abstract class Char extends Actor implements HasPositionOnLevel, Presser,
     }
 
     public void onAttackComplete() {
-        Char enemy = getEnemy();
+        if(isAlive()) {
+            Char enemy = getEnemy();
 
-        if (enemy.valid()) {
-            belongings.forEachEquipped(item -> item.preAttack(enemy));
+            if (enemy.valid()) {
+                belongings.forEachEquipped(item -> item.preAttack(enemy));
 
-            if (attack(enemy)) {
-                belongings.forEachEquipped(item -> item.postAttack(enemy));
+                if (attack(enemy)) {
+                    belongings.forEachEquipped(item -> item.postAttack(enemy));
+                }
             }
+
+            setCurAction(null);
+
+            Invisibility.dispel(this);
         }
-
-        setCurAction(null);
-
-        Invisibility.dispel(this);
-
         next();
     }
 
@@ -1236,17 +1237,16 @@ public abstract class Char extends Actor implements HasPositionOnLevel, Presser,
     }
 
     private void updateSprite(CharSprite sprite) {
-        if (isOnStage() && level().cellValid(getPos())) {
-            sprite.setVisible(Dungeon.isCellVisible(getPos()) && invisible >= 0);
+        if(!isOnStage()) {
+            sprite = DummySprite.instance;
         } else {
-            EventCollector.logException("invalid pos " + getPos() + " for:"  + this + ":" + getEntityKind());
+            if (level().cellValid(getPos())) {
+                sprite.setVisible(Dungeon.isCellVisible(getPos()) && invisible >= 0);
+            } else {
+                EventCollector.logException("invalid pos " + getPos() + " for:" + this + ":" + getEntityKind());
+            }
         }
         GameScene.addMobSpriteDirect(this, sprite);
-
-        if (isOnStage()) {
-            assert (sprite.getParent() != null);
-        }
-
 
         if (sprite.getParent() == null) {
             String err = String.format("sprite addition failed for %s %b", getEntityKind(), GameScene.isSceneReady());
@@ -1277,19 +1277,16 @@ public abstract class Char extends Actor implements HasPositionOnLevel, Presser,
         }
 
         if (sprite == null) {
-
             if (!GameScene.mayCreateSprites()) {
                 throw new TrackedRuntimeException("scene not ready for " + getEntityKind());
             }
-
-            if (Util.isDebug()) {
-                if (!isAlive()) {
-                    //throw new TrackedRuntimeException("its dead! leave it alone! " + getEntityKind());
-                }
+            if (isAlive()) {
+                sprite = newSprite();
+                sprite.lightness(lightness);
+                setGlowing(glowColor, glowPeriod);
+            } else {
+                sprite = DummySprite.instance;
             }
-            sprite = newSprite();
-            sprite.lightness(lightness);
-            setGlowing(glowColor, glowPeriod);
         }
 
         if (sprite == null) {
@@ -1302,7 +1299,9 @@ public abstract class Char extends Actor implements HasPositionOnLevel, Presser,
             updateSprite(sprite);
         }
 
-        assert (sprite.getParent() != null);
+        if(sprite.getParent() == null) {
+            sprite = DummySprite.instance;
+        }
 
         return sprite;
     }
@@ -1421,7 +1420,6 @@ public abstract class Char extends Actor implements HasPositionOnLevel, Presser,
             //GLog.debug("%s now will %s, was doing %s before", getEntityKind(), this.state.getTag(), state.getTag());
             this.state = state;
         }
-        spend(Actor.MICRO_TICK);
     }
 
     public void onSpawn(Level level) {
@@ -1924,12 +1922,13 @@ public abstract class Char extends Actor implements HasPositionOnLevel, Presser,
 
     public int getViewDistance() {
         int computedViewDistance = viewDistance;
+        int levelViewDistance = level() != null ? level().getViewDistance() : viewDistance;
 
-        if (hasBuff(Light.class)) {
-            if (level() != null) {
-                computedViewDistance = Utils.max(computedViewDistance, Level.MIN_VIEW_DISTANCE + 1, level().getViewDistance());
-            } else {
-                computedViewDistance = Math.max(computedViewDistance, Level.MIN_VIEW_DISTANCE + 1);
+        if (hasBuff(BuffFactory.BLINDNESS)) {
+            computedViewDistance = 1;
+        } else {
+            if (hasBuff(Light.class)) {
+                computedViewDistance = Utils.max(computedViewDistance, Level.MIN_VIEW_DISTANCE + 1, levelViewDistance);
             }
         }
 
@@ -2256,5 +2255,15 @@ public abstract class Char extends Actor implements HasPositionOnLevel, Presser,
 
     public void unequip(EquipableItem equipableItem) {
         getBelongings().unequip(equipableItem);
+    }
+
+    @Override
+    protected void useCell() {
+        if(level().cellValid(getPos())) {
+            Actor.occupyCell(this);
+            if (hasSprite() && !sprite.isMoving) {
+                sprite.place(getPos());
+            }
+        }
     }
 }

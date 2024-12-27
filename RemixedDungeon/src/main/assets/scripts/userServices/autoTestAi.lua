@@ -45,6 +45,12 @@ local function handleWindow(hero)
         return true
     end
 
+    if wndClass:match('WndItem') then
+        activeWindow:onSelect(0)
+        activeWindow:hide()
+        return true
+    end
+
     if wndClass:match('WndChasmJump') then
         if math.random() < 0.05 then
             activeWindow:onSelect(0)
@@ -256,6 +262,10 @@ ai.step = function()
     explorationCache:set(cell, true)
 
     hero:handle(cell)
+end
+
+ai.selectCell = function(self)
+    RPD.GameScene:handleCell(RPD.Dungeon.level:randomDestination())
 end
 
 return ai

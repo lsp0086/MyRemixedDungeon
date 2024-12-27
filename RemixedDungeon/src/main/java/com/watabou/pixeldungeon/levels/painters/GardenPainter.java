@@ -12,17 +12,17 @@ import com.watabou.utils.Random;
 public class GardenPainter extends Painter {
 
 	public static void paint( Level level, Room room ) {
-		
+
 		fill( level, room, Terrain.WALL );
 		fill( level, room, 1, Terrain.HIGH_GRASS );
 		fill( level, room, 2, Terrain.GRASS );
-		
+
 		room.entrance().set( Room.Door.Type.REGULAR );
-		
+
 		int bushes = Random.Int( 3 ) == 0 ? (Random.Int( 5 ) == 0 ? 2 : 1) : 0;
 		for (int i=0; i < bushes; i++) {
 			int cellToPlant = room.random(level);
-			
+
 			if(level.getTopLevelObject(cellToPlant)==null) {
 				level.plant( new Sungrass.Seed(), cellToPlant );
 			}
@@ -32,7 +32,7 @@ public class GardenPainter extends Painter {
 				level.plant( new Moongrace.Seed(), cellToPlant );
 			}
 		}
-		
+
 		Foliage light = (Foliage)level.blobs.get( Foliage.class );
 		if (light == null) {
 			light = new Foliage();
@@ -43,6 +43,6 @@ public class GardenPainter extends Painter {
 				light.seed( j + level.getWidth() * i, 1 );
 			}
 		}
-		level.blobs.put( Foliage.class, light );
+		level.blobPut( Foliage.class, light );
 	}
 }
