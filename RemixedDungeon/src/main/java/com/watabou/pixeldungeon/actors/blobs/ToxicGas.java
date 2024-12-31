@@ -53,7 +53,7 @@ public class ToxicGas extends Blob implements Doom {
 		int levelDamage = 5 + Dungeon.depth * 5;
 		
 		Char ch = Actor.findChar( pos );
-		if (ch != null) {
+		if (ch != null && !ch.checkAngelBless()) {
 			int damage = (ch.ht() + levelDamage) / 40;
 			if (Random.Int( 40 ) < (ch.ht() + levelDamage) % 40) {
 				damage++;

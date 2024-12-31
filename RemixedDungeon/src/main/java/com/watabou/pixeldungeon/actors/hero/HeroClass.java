@@ -198,6 +198,8 @@ public enum HeroClass implements CharModifier {
                 }
                 hero.isFree = Dungeon.isFacilitated(Facilitations.FREE_BUSINESS);
 
+                hero.isAngelBless = Dungeon.isFacilitated(Facilitations.ANGEL_BLESS);
+
                 hero.lvl(classDesc.optInt("lvl", hero.lvl()));
 
                 hero.hp(hero.ht(classDesc.optInt("hp", hero.ht())));

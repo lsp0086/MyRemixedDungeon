@@ -26,6 +26,9 @@ public class Poison extends Buff implements Doom {
 	@Override
 	public void charAct() {
 		float timeLeft = cooldown();
+		if (target.checkAngelBless()){
+			return;
+		}
 		target.damage( (int)(timeLeft / 3) + 1, this );
 	}
 

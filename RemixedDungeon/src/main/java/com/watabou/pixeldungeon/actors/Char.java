@@ -15,6 +15,7 @@ import com.nyrds.pixeldungeon.game.GameLoop;
 import com.nyrds.pixeldungeon.items.ItemOwner;
 import com.nyrds.pixeldungeon.items.Treasury;
 import com.nyrds.pixeldungeon.items.artifacts.IActingItem;
+import com.nyrds.pixeldungeon.kotlin.tools.ExTool;
 import com.nyrds.pixeldungeon.levels.objects.LevelObject;
 import com.nyrds.pixeldungeon.levels.objects.Presser;
 import com.nyrds.pixeldungeon.mechanics.HasPositionOnLevel;
@@ -138,6 +139,7 @@ public abstract class Char extends Actor implements HasPositionOnLevel, Presser,
     protected ArrayList<Char> visibleEnemies = new ArrayList<>();
     protected AiState state = MobAi.getStateByClass(Sleeping.class);
 
+    @Setter
     private Belongings belongings;
 
     @Packable(defaultValue = "-1")//EntityIdSource.INVALID_ID
@@ -176,6 +178,7 @@ public abstract class Char extends Actor implements HasPositionOnLevel, Presser,
     protected boolean flying = false;
     public int invisible = 0;
 
+    @Setter
     private int viewDistance = 8;
 
     protected final Set<String> immunities = new HashSet<>();
@@ -258,6 +261,10 @@ public abstract class Char extends Actor implements HasPositionOnLevel, Presser,
         visibleEnemies = visible;
 
         return newMob;
+    }
+
+    public boolean checkAngelBless(){
+        return false;
     }
 
     @Override
@@ -1909,11 +1916,8 @@ public abstract class Char extends Actor implements HasPositionOnLevel, Presser,
     public void teleportTo(Position target) {
     }
 
+    @Getter
     private final Map<String, String> layersOverrides = new HashMap<>();
-
-    public Map<String, String> getLayersOverrides() {
-        return layersOverrides;
-    }
 
     @LuaInterface
     public void overrideSpriteLayer(String layer, String texture) {
@@ -1924,19 +1928,18 @@ public abstract class Char extends Actor implements HasPositionOnLevel, Presser,
         int computedViewDistance = viewDistance;
         int levelViewDistance = level() != null ? level().getViewDistance() : viewDistance;
 
-        if (hasBuff(BuffFactory.BLINDNESS)) {
-            computedViewDistance = 1;
-        } else {
-            if (hasBuff(Light.class)) {
-                computedViewDistance = Utils.max(computedViewDistance, Level.MIN_VIEW_DISTANCE + 1, levelViewDistance);
+        if (checkAngelBless()){
+            computedViewDistance = ExTool.max(viewDistance * 3, 20);
+        }else{
+            if (hasBuff(BuffFactory.BLINDNESS)) {
+                computedViewDistance = 1;
+            } else {
+                if (hasBuff(Light.class)) {
+                    computedViewDistance = Utils.max(computedViewDistance, Level.MIN_VIEW_DISTANCE + 1, levelViewDistance);
+                }
             }
         }
-
         return Math.min(computedViewDistance, ShadowCaster.MAX_DISTANCE);
-    }
-
-    public void setViewDistance(int viewDistance) {
-        this.viewDistance = viewDistance;
     }
 
     @Override
@@ -1947,10 +1950,6 @@ public abstract class Char extends Actor implements HasPositionOnLevel, Presser,
     @LuaInterface
     public boolean canStepOn() {
         return walkingType.canSpawnAt(level(), getPos());
-    }
-
-    public void setBelongings(Belongings belongings) {
-        this.belongings = belongings;
     }
 
     public boolean invalid() {

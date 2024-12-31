@@ -44,6 +44,15 @@ public class CustomAbsoluteSizeSpan(context: Context, sizeSp: Int) : AbsoluteSiz
         super.updateDrawState(ds)
     }
 }
+fun <T : Comparable<T>> max(a: T, b: T): T {
+    return if (a > b) a else b
+}
+
+fun <T : Comparable<T>> min(a: T, b: T): T {
+    return if (a < b) a else b
+}
+
+
 public class Range{
     private var _start:Int = 0
     val length:Int

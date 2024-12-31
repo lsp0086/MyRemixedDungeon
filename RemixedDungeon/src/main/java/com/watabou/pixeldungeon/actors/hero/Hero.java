@@ -111,6 +111,8 @@ public class Hero extends Char {
 
     public boolean isFree = false;
 
+    public boolean isAngelBless = false;
+
     @Packable(defaultValue = "-1")//EntityIdSource.INVALID_ID
     private int controlTargetId;
 
@@ -152,6 +154,11 @@ public class Hero extends Char {
         controlTargetId = getId();
     }
 
+    @Override
+    public boolean checkAngelBless() {
+        return isAngelBless;
+    }
+
     public Hero(int difficulty) {
         this();
         setDifficulty(difficulty);
@@ -179,6 +186,7 @@ public class Hero extends Char {
 
     private static final String STRENGTH = "STR";
     private static final String ISFREE = "isfree";
+    private static final  String ISBLESS = "isbless";
     private static final String EXPERIENCE = "exp";
     public static final String DIFFICULTY = "difficulty";
     private static final String SP = "sp";
@@ -194,6 +202,7 @@ public class Hero extends Char {
 
         bundle.put(STRENGTH, STR());
         bundle.put(ISFREE,isFree);
+        bundle.put(ISBLESS,isAngelBless);
         bundle.put(EXPERIENCE, getExpForLevelUp());
         bundle.put(DIFFICULTY, getDifficulty());
 
@@ -215,6 +224,7 @@ public class Hero extends Char {
         setHeroClass(HeroClass.restoreFromBundle(bundle));
         setSubClass(HeroSubClass.restoreFromBundle(bundle));
         isFree = bundle.getBoolean(ISFREE);
+        isAngelBless = bundle.getBoolean(ISBLESS);
         STR(bundle.getInt(STRENGTH));
         updateAwareness();
 
@@ -541,11 +551,13 @@ public class Hero extends Char {
 
     @Override
     public boolean add(Buff buff) {
-        super.add(buff);
-
         if (!isOnStage()) {
             return false;
         }
+        if (isAngelBless){
+            return false;
+        }
+        super.add(buff);
 
         if (buff instanceof Burning) {
             GLog.w(StringsManager.getVar(R.string.Hero_StaBurning));
